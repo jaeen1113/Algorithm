@@ -1,0 +1,53 @@
+#include <iostream>
+#include <vector>
+#pragma warning(disable:4996)
+
+using namespace std;
+
+char Answer;
+
+int main(int argc, char** argv)
+{
+	int T, test_case;
+	int N, K, M;
+	int temp;
+
+	vector<int> coffee;
+	vector<int> price;
+	freopen("sample_input.txt", "r", stdin);
+
+	cin >> T;
+	for (test_case = 0; test_case < T; test_case++)
+	{
+
+		Answer = 0;
+		coffee.clear();
+		price.clear();
+		cin >> N;
+		cin >> M;
+		cin >> K;
+		for (int i = 0; i < N; i++) // 주문 받습니다~
+		{
+			cin >> temp;
+			coffee.push_back(temp);
+		}
+		for (int i = 0; i < M; i++) // 메뉴판 갱신
+		{
+			cin >> temp;
+			price.push_back(temp);
+		}
+
+		for (int i = 0; i < N; i++)
+			K -= price[coffee[i]-1];
+
+		// Print the answer to standard output(screen).
+		cout << "Case #" << test_case + 1 << endl;
+		
+		if (K  < 0) Answer = 'N';
+		else		  Answer = 'Y';
+			
+		cout << Answer << endl;
+	}
+
+	return 0;//Your program should return 0 on normal termination.
+}

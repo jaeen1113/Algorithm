@@ -1,0 +1,47 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+int max(int a, int b, int c)
+{
+	int temp1 = a > b ? a : b;
+	return temp1 > c ? temp1 : c;
+}
+int hopscotch(vector<vector<int> > board)
+{
+	// 함수를 완성하세요.
+	int answer = 0;
+	int depth = board.size();
+	int current;
+	int prev;
+	int max =0;
+	for (int position = 0; position < 4; position++)
+	{
+		current = board[0][position];
+		prev = position;
+		max = 0;
+		for (int i = 1; i < depth; i++)
+		{
+
+			for (int j = 0; j < 4; j++) 
+			{
+				if (j == prev) continue; //이전에 밟은 땅은 못밟아
+				if (max < board[i][j])
+				{
+					prev = j;
+					max = board[i][j];
+				}
+			}
+			current += max;
+		}
+		answer = answer < current ? current : answer;
+	}
+	
+	return answer;
+}
+
+int main()
+{
+	vector<vector<int> > test{ { 1,2,3,5 },{ 5,6,7,8 },{ 4,3,2,1 } };
+	//아래는 테스트로 출력해 보기 위한 코드입니다.
+	cout << hopscotch(test);
+}

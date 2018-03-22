@@ -1,0 +1,31 @@
+#include<iostream>
+using namespace std;
+
+int many(int n)
+{
+	int result = 0;
+
+	while (n)
+	{
+		result += n & 1;
+		n = n >> 1;
+	}
+	return result;
+}
+
+int nextBigNumber(int n)
+{
+	int answer = 0;
+	int temp = many(n);
+
+	answer = n+1;
+	while (many(answer) != temp)
+		answer++;
+
+	return answer;
+}
+int main()
+{
+	int n = 78;
+	cout << nextBigNumber(n)<<endl;
+}

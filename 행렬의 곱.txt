@@ -1,0 +1,83 @@
+N^3타임
+A의 행 이동 , B의 열 이동 , 행, 또는 열의 인자 포인터이동용 for문 총 3개의 for문
+
+
+#include<iostream>
+#include<vector>
+using namespace std;
+
+vector<vector<int> >productMatrix(vector<vector<int> >A, vector<vector<int> >B)
+{
+	vector<vector<int> >answer;
+	vector<int> temp;
+	int result;
+	for (int i = 0; i < A.size(); i++)
+	{
+		for (int j = 0; j < B[0].size(); j++)
+		{
+			result = 0;
+			for (int k = 0; k < B.size(); k++)
+				result += A[i][k] * B[k][j];
+			
+			temp.push_back(result);
+		}
+		answer.push_back(temp);
+		temp.clear();
+	}
+
+	return answer;
+}
+
+int main()
+{
+	vector<vector<int> >A{ { 1,2 },{ 2,3 }};
+	vector<vector<int> >B{ { 2,3},{ 3,4 } };
+	vector<vector<int> > testAnswer = productMatrix(A, B);
+
+	for (int i = 0; i<testAnswer.size(); i++)
+	{
+		for (int j = 0; j<testAnswer[i].size(); j++)
+			cout << testAnswer[i][j] << " ";
+		cout << "\n";
+	}
+}
+
+
+
+-----------------------------------------------------------------
+
+
+
+
+#include<iostream>
+#include<vector>
+using namespace std;
+vector<vector<int> >productMatrix(vector<vector<int> >A, vector<vector<int> >B)
+{
+    vector<vector<int> >answer;
+  answer.resize(A.size());
+  for(int i = 0; i < answer.size(); i++){
+    answer[i].resize(B[0].size());
+  }
+    for(int i = 0; i < answer.size(); i++){
+      for(int j = 0; j < answer[0].size(); j++){
+         for(int k = 0; k < A[0].size() ; k++){
+            answer[i][j] += A[i][k] * B[k][j];
+         }
+     }
+  }
+    return answer;
+}
+int main()
+{
+    vector<vector<int> >A{{1,2}};
+    vector<vector<int> >B{{1,2,3},{2,3,4}};
+    vector<vector<int> > testAnswer = productMatrix(A,B);
+    for(int i=0;i<testAnswer.size(); i++)
+    {
+        for(int j=0;j<testAnswer[i].size(); j++)
+            cout<<testAnswer[i][j]<<" ";
+        cout<<"\n";
+    }
+}
+

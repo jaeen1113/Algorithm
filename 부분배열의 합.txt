@@ -1,0 +1,54 @@
+#include <iostream>
+#include <vector>
+#pragma warning(disable:4996)
+using namespace std;
+int Answer;
+int main(int argc, char** argv)
+{
+	int T, test_case;
+	int N, value;
+	int sum_ga = 0;
+	int sum_se = 0;
+	vector< vector<int> > arr;
+	vector<int> temp;
+	freopen("sample_input.txt", "r", stdin);
+	cin >> T;
+
+	for (test_case = 0; test_case < T; test_case++)
+	{
+		Answer = 0;
+		cin >> N;
+		// data를 arr에 모두 받기
+		for (int j = 0; j < N; j++)
+		{
+			temp.clear();
+			for (int k = 0; k < N; k++)
+			{
+				cin >> value;
+				temp.push_back(value);
+			}
+			arr.push_back(temp);
+		}
+		for (int k = 0; k < N; k++)
+		{
+			for (int length = N; length > 0; length--)	// 탐색할 윈도우의 크기
+			{
+				for (int head = 0; head + length <= N; head++)	// 윈도우의 종료 지점 재정의						{					
+					sum_ga = 0;
+					sum_se = 0;
+					for (int point = head; point < head + length; point++)
+					{
+						sum_ga += arr[k][point];
+						sum_se += arr[point][k];
+
+					}
+					int big = (sum_ga > sum_se) ? sum_ga : sum_se;
+					Answer = (Answer > big) ? Answer : big;
+				}
+			}
+		}
+		cout << "Case #" << test_case + 1 << endl;
+		cout << Answer << endl;
+	}
+	return 0;//Your program should return 0 on normal termination.
+}
