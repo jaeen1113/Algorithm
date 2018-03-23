@@ -1,0 +1,55 @@
+//본 문제는 프로그래머스 LEVEL 4의 공항 건설하기 문제로 
+//각 도시를 수직선상에 놓았을 때 공항을 지을 곳 A는 
+//공항을 기준으로 인구의 절반씩이 좌우에 각각 거주하게 되는 지점으로 선택하였다.
+
+#include<iostream>
+#include<vector>
+#include<utility>
+#include<algorithm>
+using namespace std;
+
+int chooseCity(int n, vector<pair<int, int>> city)
+{
+	int answer = 0;
+	long long people = 0;
+	long long sum = 0;
+	//총 인구수의 절반 계산
+	for (int i = 0; i < city.size(); i++)
+		people += city[i].second;
+	people = people/2;
+
+	// 위치 순으로 도시 정렬
+	sort(city.begin(), city.end());
+
+	int i = 0;
+	// 왼쪽끝도시에서부터 인구수를 더해가면서 중간 지점이 될 곳을 찾음
+	while (1)
+	{
+		sum += city[i].second;
+		answer = city[i].first;
+
+		if (sum > people) break;
+		
+		i++;
+	}
+	
+
+	return answer;
+}
+//}
+int main()
+{
+
+	int tn = 3;
+	pair<int, int> a, b, c, d,e,f;
+	a.first = -100; a.second = 70;
+	b.first = 10; b.second = 80;
+	c.first = 500; c.second = 100;
+	//d.first = 500; d.second = 400;
+	//e.first = 600; e.second = 900;
+	//f.first = 1000; f.second = 50;
+	vector<pair<int, int>> tcity{ a,b,c,d };
+
+	//아래는 테스트 출력을 위한 코드입니다.
+	cout << chooseCity(tn, tcity);
+}
