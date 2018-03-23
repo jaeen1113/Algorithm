@@ -1,0 +1,41 @@
+#include<iostream>
+#include<vector>
+#include<string>
+using namespace std;
+
+string change124(int no)
+{
+	string answer = "";
+	int an = 0;
+	int quotion = 0;
+	int rest = 0;;
+	string arr[4] = {"0","1", "2", "4"};
+	int count = 0;
+
+	while (1) {
+		quotion = no / 3;		// 몫과 나머지 산출
+		rest = no % 3;
+		if (rest == 0)			// 나누어 떨어지는 경우는 4를 넣어줘야하기 때문에 몫에서 1을 빼고 나머지를 3으로 set
+		{
+			quotion -= 1;
+			rest = 3;
+		}
+		answer.insert(0, arr[rest]);		// 나머지 삽입 : 그 이외에는 기존의 N진법과 동일
+		no = quotion;
+		if (no <= 3) break;
+	}
+	if(quotion != 0)
+		answer.insert(0, arr[quotion]);
+	
+	return answer;
+}
+int main()
+{
+	int testNo = 13;
+	for (int i = 1; i <= 15; i++) {
+		string testanswer = change124(i);
+
+		cout << testanswer << endl;
+	}
+
+}
