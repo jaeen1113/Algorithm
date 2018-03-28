@@ -4,110 +4,39 @@ DP로 현재 위치를 오른쪽 아래로 했을 때, 만들수 있는 가장 큰 정사각형 넓이를 tabl
 #include<iostream>
 #include<vector>
 #include<utility>
+#include<algorithm>
+
 using namespace std;
-int minimum(int a, int b, int c)
+int dp[1001][1001] = {0};
+
+int solution(vector<vector<int>> board)
 {
-	int result = c < ((a < b) ? a : b) ? c : (a < b) ? a : b;
-	return result;
+    int ans = 0;
+    int row = board.size();
+    int col = board[0].size();
+    for (int i = 1; i <= row; ++i)
+    {
+        for (int j = 1; j <= col; ++j)
+        {
+            if(board[i-1][j-1] != 0 )
+            {
+                dp[i][j] = min(dp[i][j-1], min(dp[i-1][j], dp[i-1][j-1])) + 1;
+                ans = max(ans, dp[i][j]);
+            }
+        }
+    }
+    return ans*ans;
 }
-
-
-int findLargestSquare(vector<vector<char>> board)
-{
-	int answer = 0;
-	int size = board.size();
-	vector< vector<int> >table;
-	vector<int> nod;
-	int length = 0;
-	for (int i = 0; i < size; i++)	
-	{
-			nod.resize(size);
-			table.push_back(nod);
-	}
-
-	for (int i = 0; i < board.size(); i++){			// board 데이터 변환 작업
-		for (int j = 0; j < board[0].size(); j++){
-			if (board[i][j] == 'O')
-				table[i][j] = 1;
-			else
-				table[i][j] = 0;
-		}
-	}
-
-	// 2x2 짜리 윈도우를  이동시키면서 어딘가의 왼쪽 위 지점부터 현재의 오른쪽 아래까지 가능한 최대 크기 저장 
-	for (int i = 1; i < board.size(); i++) {
-		for (int j = 1; j < board[0].size(); j++) {
-			if (table[i][j] >= 1 && table[i - 1][j] >= 1 && table[i][j - 1] >= 1 && table[i - 1][j - 1] >= 1)
-			{
-				table[i][j] = minimum(table[i - 1][j], table[i][j - 1], table[i - 1][j - 1]) + 1;
-				
-				if (answer < table[i][j]) answer = table[i][j];
-			}
-		}
-	}
-	return answer*answer;
-
-}
-
-
-	
-//
-//int findLargestSquare(vector<vector<char>> board)
-//{
-//	int answer = 0;
-//	int size = board.size();
-//	int length = 0;
-//	int temp_i, temp_j = 0;
-//	int good;
-//
-//	for (int i = 0; i < board.size(); i++)			// board 전체를 확인해 가면서
-//	{
-//		if (board.size() - i < length)	return answer;
-//
-//		for (int j = 0; j < board[0].size(); j++)		
-//		{
-//			if (board[0].size() - j < length)	return answer;
-//
-//			if (board[i][j] == 'O')			// O로 check된 지점 확인
-//			{
-//				temp_i = i;
-//				temp_j = j;
-//				good = 1;
-//				length = 0;
-//
-//				while (temp_i < size && temp_j < size)	// O로 이루어진 연속 최소 길이 영역 확인
-//				{
-//					if (board[temp_i++][j] == 'X' || board[i][temp_j++] == 'X') break;
-//					length++;
-//				}
-//					
-//				if (length*length <= answer) continue;
-//
-//				for (int count_i = 0;  count_i < length; count_i++) {			// length*length 영역안에 X있는지 탐색
-//					for (int count_j = 0;  count_j < length; count_j++) { 
-//						if (board[i + count_i][j + count_j] == 'X')				// 중간에 x 발견시 거기까지의 행, 열 길이 중 작은게 최대 면적
-//							length = (count_j - j < count_i - i) ? (count_j-j+1):(count_i-i+1);
-//					}
-//				}
-//
-//				answer = length*length;		
-//					
-//			}
-//		}
-//	}
-//
-//	return answer;
-//}
 int main()
 {
 
 	vector<vector<char>> board{
-		{ 'X','O','O','O','X' },
-		{ 'X','O','O','O','O' },
-		{ 'X','O','X','O','O' },
-		{ 'X','X','O','O','O' },
-		{ 'X','X','X','X','X' } };
+		{ '0','1','1','1','0' },
+		{ '0','1','1','1','1' },
+		{ '0','1','0','1','1' },
+		{ '0','0','1','1','1' },
+		{ '0','0','0','0','0' } };
 
 	//아래는 테스트 출력을 위한 코드입니다.
-	cout << findLargestSquare(board)<<endl;
+	cout << solution(board)<<endl;
 }
