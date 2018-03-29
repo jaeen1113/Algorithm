@@ -1,0 +1,116 @@
+#include <iostream>
+#include <vector>
+#pragma warning(disable:4996)
+using namespace std;
+
+int Answer;
+int main(int argc, char** argv)
+{
+	int T, test_case;
+	int N, M, K;
+	int z1, z2;
+	int value = 1;
+	int fir_row_rock = 0;
+	int fir_col_rock = 0;
+
+	vector<int> current_line;
+	vector<int> prev_line;
+	vector< pair<int, int> > rock;
+	pair<int,int> temp;
+	freopen("sample_input.txt", "r", stdin);
+
+
+	cin >> T;
+	for (test_case = 0; test_case < T; test_case++)
+	{
+
+		cin >> N;
+		cin >> M;
+		cin >> K;
+		Answer = 0;
+		value = 1;
+	
+		current_line.clear();
+		prev_line.clear();
+		rock.clear();
+
+		current_line.resize(M);
+		prev_line.resize(M);	// 시작시  prev line 은 모두 1로 초기화 해둠
+		
+		for (int i = 0; i < K; i++)	// 장애물 데이터 확보
+		{
+			cin >> z1;
+			cin >> z2;
+			if (z1 - 1 < N && z2 - 1 < M)		// 체스판 밖에 있는 장애물도 있다함 ...ㅁㅊ...
+			{
+				temp.first = z1 - 1;
+				temp.second = z2 - 1;
+				rock.push_back(temp);
+				cout << rock[i].first <<" " << rock[i].second << endl;
+			}
+		}
+
+		for (int i = 0; i < rock.size(); i++)		// 첫번째 row에 장애물 설치
+		{
+			if (rock[i].first == 0)					// 만약에 중간에 장애물 있으면
+			{				
+				prev_line[rock[i].second] = -1;		// 그 자리에 장애물 표시해줌
+				fir_row_rock = 1;
+			}
+		}
+		
+		// 첫번쨰 row 초기화
+		for (int i = 0; i < M; i++)					// 중간에 바위나오지 않는이상 모두 1, 나오면 그 뒤로는 모두 0
+		{
+			if (fir_row_rock == 0)
+				prev_line[i] = 1;
+			else
+				prev_line[i] = 0;
+		}
+		
+
+		for (int i = 1; i < N; i++)
+		{
+			for (int k = 0; k < rock.size(); k++)		// current_line에 바위 셋팅
+			{
+				if (rock[k].first == i)					// current_line에 바위가 있으면
+					current_line[rock[k].second] = -1;
+
+				if (rock[k].second == 0)					// 만약에 첫번쨰 열에 바위가 있다면 
+					fir_col_rock = 1;			
+			}
+
+			if (fir_col_rock == 0)						// 지금까지 오면서 첫번째 세로줄에 바위가 없었다면 1로 없으면 0 으로 셋팅
+				current_line[0] = 1;
+			else
+				current_line[0] = 0;
+
+			for (int j = 1; j < M; j++)
+			{
+				
+				if (current_line[j] == -1) continue;		// 현재 칸이 장애물이면 다음칸꺼 확인
+				else if (current_line[j - 1] == -1 && prev_line[j] != -1)				// 현 위치 왼쪽칸이 막혀있고 위만 뚤려있다면
+					current_line[j] = prev_line[j];
+				else if (current_line[j - 1] != -1 && prev_line[j] == -1)				// 현 위치 왼쪽칸이 안막혀있고 위가 막혀있따면
+					current_line[j] = current_line[j - 1];
+				else if (current_line[j - 1] == -1 && prev_line[j] == -1)				// 현 위치 왼쪽칸, 위쪽칸 모두 막혀있다면?
+					current_line[j] = 0;
+				else
+					current_line[j] = (current_line[j-1] + prev_line[j]) % 1000000007;
+			}
+			prev_line.clear();
+			prev_line = current_line;
+			current_line.clear();
+			current_line.resize(M, 0);
+		}
+
+
+		Answer = prev_line[M - 1] % 1000000007 ;
+
+		// Print the answer to standard output(screen).
+		cout << "Case # : " << test_case + 1 << endl;
+		cout << Answer << endl;
+	}
+
+	return 0;//Your program should return 0 on normal termination.
+}
