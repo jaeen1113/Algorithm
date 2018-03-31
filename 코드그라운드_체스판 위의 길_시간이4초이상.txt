@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <vector>
 #pragma warning(disable:4996)
@@ -11,9 +12,9 @@ int main(int argc, char** argv)
 	int T, test_case;
 	int N, M, K;
 	int z1, z2;
-	int value = 1;
-	int fir_row_rock = 0;
-	int fir_col_rock = 0;
+	int row = 0;
+	int fir_col_rock_value;
+
 
 	vector<int> current_line;
 	vector<int> prev_line;
@@ -30,11 +31,14 @@ int main(int argc, char** argv)
 		cin >> M;
 		cin >> K;
 		Answer = 0;
-		value = 1;
+		row = 1;
+		fir_col_rock_value = N;
+		
 
 		current_line.clear();
 		prev_line.clear();
 		rock.clear();
+
 
 		current_line.resize(M, -1);
 		prev_line.resize(M, 1);	// 시작시  prev line 은 모두 1로 초기화 해둠
@@ -48,10 +52,12 @@ int main(int argc, char** argv)
 				temp.first = z1 - 1;
 				temp.second = z2 - 1;
 				rock.push_back(temp);
+				if (temp.second == 0 && temp.first < fir_col_rock_value)
+					fir_col_rock_value = temp.first;	// 첫번째 열에서 가장 시작점과 가까운 장애물의 row값 저장
 			}
 		}
 
-		for (int i = 0; i < rock.size(); i++)		// 첫번째 row에 장애물 설치
+		for (unsigned int i = 0; i < rock.size(); i++)		// 첫번째 row에 장애물 설치
 		{
 			if (rock[i].first == 0)					// 만약에 중간에 장애물 있으면
 				prev_line[rock[i].second] = 0;		// 그 자리에 장애물 표시해줌	
@@ -67,29 +73,27 @@ int main(int argc, char** argv)
 
 		for (int i = 1; i < N; i++)
 		{
-			for (int k = 0; k < rock.size(); k++)		// current_line에 바위 셋팅
+			for (unsigned int k = 0; k < rock.size(); k++)		// current_line에 바위 셋팅
 			{
 				if (rock[k].first == i)					// current_line에 바위가 있으면
-				{
 					current_line[rock[k].second] = 0;
-					if (rock[k].second == 0)			// current_line의 제일 첫칸에 바위있으면 그 다음 줄부터는 첫칸을 0으로 하기 위해 flag set
-						fir_col_rock = 1;
-				}
 			}
 
-			if (fir_col_rock == 0)						// 지금까지 오면서 첫번째 세로줄에 바위가 없었다면 1로 없으면 0 으로 셋팅
+			if (row < fir_col_rock_value)						// 지금까지 오면서 첫번째 세로줄에 바위가 없었다면 1로 있었으면 0 으로 셋팅
 				current_line[0] = 1;
 			else
 				current_line[0] = 0;
 
-			
 			for (int j = 1; j < M; j++)
 			{
-				
+
 				if (current_line[j] == 0) continue;		// 현재 칸이 장애물이면 다음칸으로 이동
 				else
 					current_line[j] = (current_line[j - 1] + prev_line[j]) % 1000000007;
+				
 			}
+
+			row++;
 			prev_line.clear();
 			prev_line = current_line;
 			current_line.clear();
