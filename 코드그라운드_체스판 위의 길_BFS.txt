@@ -1,0 +1,101 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#pragma warning(disable:4996)
+using namespace std;
+
+int Answer;
+
+int main(int argc, char** argv)
+{
+	int T, test_case;
+	int N, M, K;
+	int z1, z2;
+	int right = 0;
+	int down = 0;
+
+	queue<pair<int, int>> way_que;
+	vector< pair<int, int> > rock;
+	//vector<int> temp;
+	pair<int,int> temp;
+	freopen("sample_input.txt", "r", stdin);
+	cin >> T;
+
+	for (test_case = 0; test_case < T; test_case++)
+	{
+		cin >> N;
+		cin >> M;
+		cin >> K;
+		Answer = 0;
+		temp.first = 0;
+		temp.second = 0;
+		rock.clear();
+
+		way_que.push(temp);
+
+		for (int i = 0; i < K; i++)	// 장애물 데이터 확보
+		{
+			cin >> z1;
+			cin >> z2;
+			if (z1 - 1 < N && z2 - 1 < M)		// 체스판 밖에 있는 장애물도 있다함 ...ㅁㅊ...
+			{
+				temp.first = z1 - 1;
+				temp.second = z2 - 1;
+				rock.push_back(temp);
+			}
+		}
+
+		sort(rock.begin(), rock.end());
+
+
+		while (way_que.size() != 0)
+		{
+			int i = way_que.front().first;
+			int j = way_que.front().second;
+			
+
+			way_que.pop();
+
+
+			if (i == N - 1 && j == M - 1)
+				Answer = (Answer + 1) % 1000000007;
+
+			else
+			{
+				right = 0;
+				down = 0;
+
+				for (unsigned int k = 0; k < rock.size(); k++)
+				{
+					if (j < M - 1 && rock[k].first == i     && rock[k].second == j + 1) // 현재 위치 오른쪽에 바위 있으면 
+						right = 1;
+ 					if (i < N - 1 && rock[k].first == i + 1 && rock[k].second == j)	// 현재 위치 아래쪽에 바위 있으면 
+						down = 1;
+				}
+
+				if (right == 0 && j != M-1)	// 오른쪽 긑에 도달하지 않았고, 오른쪽에 바위 없으면 
+				{
+					temp.first = i;
+					temp.second = j + 1;
+					way_que.push(temp);
+				}
+				if (down == 0 && i != N-1)	// 아래 끝에 도달하지 앟ㄴ았고, 아래에 바위 없으면
+				{
+					temp.first = i + 1;
+					temp.second = j;
+					way_que.push(temp);
+				}
+			}
+		}
+
+
+		Answer = Answer% 1000000007 ;
+
+		// Print the answer to standard output(screen).
+		cout << "Case # : " << test_case + 1 << endl;
+		cout << Answer << endl;
+	}
+
+	return 0;//Your program should return 0 on normal termination.
+}
