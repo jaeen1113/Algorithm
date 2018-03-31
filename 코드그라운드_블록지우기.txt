@@ -1,0 +1,90 @@
+/*
+You should use the statndard input/output
+
+in order to receive a score properly.
+
+Do not use file input and output
+
+Please be very careful.
+*/
+
+#include <iostream>
+#include <vector>
+#pragma warning(disable:4996)
+using namespace std;
+
+int Answer;
+int min(int a, int b, int c)
+{
+	int result;
+	result = c < (a < b ? a : b) ? c : (a < b ? a : b);
+
+	return result;
+}
+int main(int argc, char** argv)
+{
+	
+	int T, test_case;
+	int number_tower;
+	vector<int> towers;
+	vector<int> towers_new;
+	//freopen("sample_input.txt", "r", stdin);
+
+	cin >> T;
+	for (test_case = 0; test_case < T; test_case++)
+	{
+		cin >> number_tower;
+		Answer = 0;
+		
+		towers.resize(number_tower);
+		for (int i = 0; i < number_tower; i++)	// 타워 정보 기입
+		{
+			int temp;
+			cin >> temp;
+			towers[i] = temp;
+		}
+
+		while(towers.size() != 0)
+		{			
+			if (towers.size() < 3)
+			{
+				Answer++;
+				break;
+			}
+			towers_new = towers;
+					
+			for (int i = 1; i < towers.size()-1; i++)	// 어차피 제일 첨이랑 제일 끝은 한큐에 지워짐
+			{
+				towers[i] -= 1;							// 일단 하나씩 까내림
+				towers[i] = min(towers[i], towers_new[i-1], towers_new[i+1]); // 근데 하나 까는것보다 옆에있는애들이 더 낮아 ? 그럼 그만큼으로 까내리셈
+			}
+
+			// 제일 왼쪾 오른쪽도 한큐에 까주고  / 하나만 남은 상황이면 터지니까 조건문 ㅇㅇ				
+			if (towers.size() == 1)
+				towers.erase(towers.begin());
+			else
+			{
+				towers.erase(towers.begin());
+				towers.erase(towers.end() - 1);
+			}
+
+			// 0이 되버린 타워들 지우기
+			vector<int>::iterator it = towers.begin();
+			while (it != towers.end())
+			{
+				if (*it == 0)
+					it = towers.erase(it);
+				else 
+					it++;
+			}
+
+			Answer++;
+		}
+
+		// Print the answer to standard output(screen).
+		cout << "Case #" << test_case + 1 << endl;
+		cout << Answer << endl;
+	}
+
+	return 0;//Your program should return 0 on normal termination.
+}
