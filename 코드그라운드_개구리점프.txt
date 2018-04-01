@@ -1,0 +1,62 @@
+
+#include <iostream>
+#include <vector>
+#pragma warning(disable:4996)
+using namespace std;
+
+int Answer;
+
+int main(int argc, char** argv)
+{
+	int T, test_case;
+	int jump;
+	int number_rock;
+	int count;
+	vector<int> rocks;
+	freopen("sample_input.txt", "r", stdin);
+
+	cin >> T;
+	for (test_case = 0; test_case < T; test_case++)
+	{
+		cin >> number_rock;
+		rocks.resize(number_rock+1, 0);
+		rocks[0] = 0;	// 시작 지점 돌
+		for (int i = 1; i <= number_rock; i++)	// 그외 돌
+			cin >> rocks[i];
+		cin >> jump;			// 최대 점프 거리
+
+		Answer = 0;
+
+		int i = 0;				// rock 배열의 위치 포인터 
+
+		while(i < number_rock)
+		{
+			int temp = 0;
+			for (int j = 1; j <= jump && i+j <= number_rock; j++)
+			{
+				if (rocks[i + j] > rocks[i] + jump) // 다음 점프할 돌이 현위치 + jump 값 안쪽에 위치하지 않으면 break;
+					break;
+
+				temp = j;
+			}
+			
+			if (temp == 0)	// 점프할 곳이 없으면 
+			{
+				Answer = -1;
+				break;
+			}
+
+			i += temp;
+			Answer++;
+		}
+
+
+
+
+		// Print the answer to standard output(screen).
+		cout << "Case #" << test_case + 1 << endl;
+		cout << Answer << endl;
+	}
+
+	return 0;//Your program should return 0 on normal termination.
+}
