@@ -1,0 +1,127 @@
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#pragma warning(disable:4996)
+using namespace std;
+
+int Answer;
+
+int main(int argc, char** argv)
+{
+	int T, test_case;
+	int room;
+	int x = 1, y = 1;
+	char from_direction = 'l'; // 시작시 진입방향은 왼쪽
+	vector< vector< pair<int, int> > > check; // 첫번째꺼는 거울, 두번쨰꺼는 이미 찍혔는지 아닌지.
+	vector< pair<int, int> > temp;
+	freopen("sample_input.txt", "r", stdin);
+
+	cin >> T;
+	for (test_case = 0; test_case < T; test_case++)
+	{
+		string info;
+		
+		Answer = 0;
+		from_direction = 'l';
+		check.clear();
+		temp.clear();
+		
+		cin >> room;
+		temp.resize(room+2);
+		check.resize(room+2, temp);
+
+		// room 정보 기입( 방 테두리에 padding 해두고 1,1 부터 기입)
+		for (int i = 0; i < room; i++)
+		{
+			cin >> info;
+			for (int j = 0; j < room; j++)
+				check[i+1][j+1].first = info[j] - 48;
+		}
+		
+		for (int x = 1, y = 1; x != 0 && x != room + 1 && y != 0 && y != room + 1;)
+		{
+			if (check[y][x].first == 1) //  '/' 형 거울 
+			{
+				if (check[y][x].second != 1) 
+					Answer++;
+
+				check[y][x].second = 1;
+			
+				if (from_direction == 'u')	// 위쪽에서 진입
+				{
+					x--;
+					from_direction = 'r';
+				}
+				else if (from_direction == 'd') // 아래쪽에서 진입
+				{
+					x++;
+					from_direction = 'l';
+				}
+				else if (from_direction == 'l') // 왼쪽에서 진입
+				{
+					y--;
+					from_direction = 'd';
+				}
+				else	// 오른쪽에서 진입
+				{
+					y++;
+					from_direction = 'u';
+				}
+			}
+			else if (check[y][x].first == 2) // '\'형 거울
+			{
+				if (check[y][x].second != 1) 
+					Answer++;
+
+				check[y][x].second = 1;
+
+				if (from_direction == 'u')	// 위쪽에서 진입
+				{
+					x++;
+					from_direction = 'l';
+				}
+
+				else if (from_direction == 'd') // 아래쪽에서 진입
+				{
+					x--;
+					from_direction = 'r';
+				}
+
+				else if (from_direction == 'l') // 왼쪽에서 진입
+				{
+					y++;
+					from_direction = 'u';
+				}
+
+				else	// 오른쪽에서 진입
+				{
+					y--;
+					from_direction = 'd';
+				}
+			}
+			else			// no 거울
+			{
+				if (from_direction == 'u')	// 위쪽에서 진입	
+					y++;
+
+				else if (from_direction == 'd') // 아래쪽에서 진입
+					y--;
+
+				else if (from_direction == 'l') // 왼쪽에서 진입
+					x++;
+
+				else	// 오른쪽에서 진입
+					x--;
+			}
+		}
+
+
+		// Print the answer to standard output(screen).
+		cout << "Case #" << test_case + 1 << endl;
+		cout << Answer << endl;
+	}
+
+	return 0;//Your program should return 0 on normal termination.
+}
