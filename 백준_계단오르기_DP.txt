@@ -1,0 +1,42 @@
+#include <iostream>
+#include <cstring>
+#include <vector>
+#include <math.h>
+
+#pragma warning(disable:4996)
+using namespace std;
+
+int max(int a, int b) {
+	return (a > b) ? a : b;
+}
+int main() {
+
+	int num;
+	vector<int> dp;
+	vector<int> arr;
+	int output = 0;
+	int curr = 0;
+	int prev = 0;
+
+	cin >> num;
+	arr.resize(num + 1, 0);
+	dp.resize(num + 1, 0);
+	for (int i = 1; i < num+1; i++)
+		cin >> arr[i];
+	
+	for (int i = 1; i <= 3; i++) {
+		if (i == 3) {
+			dp[i] = max(arr[i] + dp[i - 2], arr[i] + arr[i - 1]);
+		}
+		else
+			dp[i] = dp[i - 1] + arr[i];
+	}
+	
+	for (int i = 4; i <= num; i++) {
+		dp[i] = max(arr[i] + dp[i - 2], arr[i] + arr[i - 1] + dp[i - 3]);
+	}
+	cout << dp[num] << endl;
+
+	return 0;
+	
+}

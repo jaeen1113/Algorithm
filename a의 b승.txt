@@ -1,0 +1,49 @@
+#include <iostream>
+#include <cstring>
+#include <vector>
+#include <math.h>
+
+#pragma warning(disable:4996)
+using namespace std;
+
+int func(double a) {
+	int ret = 0;
+	double start = a;
+	double d,y;
+	for (;;) {
+		y = modf(start, &d);
+		if (y == 0) break;
+		ret += 1;
+		start = start * 10;
+	}
+	return ret;
+}
+
+int main() {
+
+	double a;
+	int b,c,d;
+	int val = 0;
+	cout << "실수값 : ";
+	cin >> a;
+	cout << "제곱 수 : ";
+	cin >> b;
+
+	long long last_a =1;
+	long long last_b = 1;
+	val = func(a);
+
+	c = (int)pow(10.0, (double)val); // 소숫점 아래 자릿수값을 10의 n승으로 표현(입력받은 실수를 정수로 올리기 위해)
+	d = a * c;	// 소숫점 아래값들을 소숫점 위로 끌어올림.
+	
+	//반복문 돌면서 최종 자릿수 값 계산
+	for (int i = 0; i < b; i++) {
+		last_b *= c;
+		last_a *= d;
+	}
+
+	double output = (double)last_a / last_b;
+	cout.precision(func(output));
+	cout << fixed << "결과 : " << (double)last_a/last_b << endl; // 출력 소숫점 고정
+	
+}
