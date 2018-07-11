@@ -1,0 +1,28 @@
+#include <iostream>
+#include <cstring>
+#include <vector>
+#include <math.h>
+
+#pragma warning(disable:4996)
+using namespace std;
+
+void pick(int n, vector<int>& picked, int topick) {
+
+	if (topick == 0) {
+		for (int i = 0; i < picked.size(); i++)
+			cout << picked[i];
+		cout << endl;
+		return;
+	}
+	int leastone = picked.empty() ? 0 : picked.back() + 1;
+	for (int i = leastone; i < n; i++) {
+		picked.push_back(i);
+		pick(n, picked, topick - 1);
+		picked.pop_back();
+	}
+}
+
+int main() {
+	vector<int> picked;
+	pick(10, picked, 4);
+}

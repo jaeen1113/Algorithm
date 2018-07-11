@@ -1,0 +1,94 @@
+#include <iostream>
+#include <cstring>
+#include <vector>
+#include <math.h>
+
+#pragma warning(disable:4996)
+using namespace std;
+
+int num = 0;
+
+int typeset[4][3][2] =
+{   {{0,0}, {1, 0}, {0,  1}},
+	{{0,0}, {0, 1}, {1,  1}},
+	{{0,0}, {1, 0}, {1,  1}},
+	{{0,0}, {1, 0}, {1, -1}} };
+
+int sett(int x, int y, int type, vector< vector<int> >& board, int delta) {	// delta = 삭제인지 추가인지 
+	int ok = 1;
+	
+
+	for (int i = 0; i < 3; ++i) {
+		int nx = x + typeset[type][i][1];
+		int ny = y + typeset[type][i][0];
+
+		if (nx >= board[0].size() || nx < 0 || ny >= board.size() || ny < 0) { ok = 0; break; }
+		else {
+			if ((board[ny][nx] += delta) > 1) { ok = 0; break; }
+		}
+	}
+	
+	
+	
+	return ok;
+}
+
+int cover(vector< vector<int> >& board) {
+
+	int x = -1, y = -1;
+	for (int i = 0; i < board.size(); i++) {
+		for (int j = 0; j < board[0].size(); j++) {
+			if (board[i][j] == 0) { // 비어있는 블락이면
+				y = i;
+				x = j;
+				break;
+			}
+		}
+		if (y != -1) break;
+	}
+
+	if (y == -1) return 1;
+
+	int ret = 0;
+	// 넣을수 있는 지점에서 4가지 블락을 끼워 넣어 봄
+	for (int type = 0; type < 4; type++) {
+		if (sett(x, y, type, board, 1)) ret += cover(board);	// 현재의 위치에 블록을 쑤셔 넣을수 있다면 다음 블록을 쑤셔 넣으러 ㄱㄱ
+		sett(x, y, type, board, -1); // 현재의 블록 빼기
+	}
+	return ret;
+}
+int main() {
+	freopen("sample_input.txt", "r", stdin);
+
+	int testcase;
+	int width, height;
+	int output;
+	vector< vector<int> > board;
+	
+	cin >> testcase;
+
+	for (int i = 0; i < testcase; i++) {
+		cin >> height;
+		cin >> width;
+	
+		
+		for (int j = 0; j < height; j++) {
+			vector<int> temp(width);
+			board.push_back(temp);
+		}
+
+		char temp;
+		for (int j = 0; j < height; j++) {
+			for (int k = 0; k < width; k++)
+			{
+				cin >> temp;
+				if (temp == '#') board[j][k] = 1;
+			}
+		}
+
+		output = cover(board);
+
+		cout << i << "번째 보드 : " << output << endl;
+
+	}
+}

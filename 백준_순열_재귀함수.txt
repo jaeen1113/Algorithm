@@ -1,0 +1,39 @@
+#include <iostream>
+#include <cstring>
+#include <vector>
+#include <math.h>
+
+#pragma warning(disable:4996)
+using namespace std;
+
+void pick(int n, int topick, vector<int>& list, vector<int>& picked) {
+
+	if (topick == 0) {
+		for (int j = 0; j < n; j++) 
+			cout << picked[j];
+		cout << endl;
+		return;
+	}
+
+	for (int i = 0; i < n; i++) {
+		if (list[i] == 0) {
+			list[i] = 1;
+			picked.push_back(i+1);
+			pick(n, topick - 1, list, picked); 
+			list[i] = 0;
+			picked.pop_back();
+		}
+		
+	}
+
+
+}
+
+int main() {
+	vector<int> list;
+	vector<int> picked;
+	int a;
+	cin >> a;
+	list.resize(a, 0);
+	pick(a, a, list, picked);
+}

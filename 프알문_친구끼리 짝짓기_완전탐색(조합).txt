@@ -1,0 +1,64 @@
+#include <iostream>
+#include <cstring>
+#include <vector>
+#include <math.h>
+
+#pragma warning(disable:4996)
+using namespace std;
+
+int friend_num, pair_num;
+
+int countPairings(bool (*areFriends)[10], bool taken[10]) {
+	int firstFreeman = -1;
+	int ret = 0;
+
+	// 짝이 없는 사람중 가장 빠른 사람 찾음
+	for (int i = 0; i < friend_num; i++)
+	{
+		if (!taken[i]) {
+			firstFreeman = i; break;
+		}
+	}
+	// 모든 짝이 매칭된 경우
+	if (firstFreeman == -1) return 1;
+
+	for (int i = firstFreeman + 1; i < friend_num; i++) {
+		if (!taken[i] && areFriends[firstFreeman][i]) {	// 지목 대상이 자신과 친구이고 짝이 없는 상태일 경우에
+			taken[i] = taken[firstFreeman] = true;
+			ret += countPairings(areFriends, taken);
+			taken[i] = taken[firstFreeman] = false;		// 모든 경우의 수를 살펴야 하기 때문에 다른 경우의 수를 위해 false 처리 해줌
+		}
+	}
+
+	return ret;
+}
+int main() {
+	int casenum;
+
+	int output;
+	freopen("sample_input.txt", "r", stdin);
+
+	cin >> casenum;
+
+	for (int i = 0; i < casenum; i++) {
+		cin >> friend_num;
+		cin >> pair_num;
+
+		bool areFriends[10][10] = {false,};
+		bool taken[10] = {false, };
+		for (int j = 0; j < pair_num; j++) {
+			int temp_a, temp_b;
+			cin >> temp_a;
+			cin >> temp_b;
+
+			areFriends[temp_a][temp_b] = areFriends[temp_b][temp_a] = true;
+		}
+
+		output = countPairings(areFriends, taken);
+
+		cout << "짝 지어질 수 있는 최대 pair는 " << output << " 짝 입니다." << endl;
+
+	}
+
+
+}
