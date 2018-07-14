@@ -1,0 +1,53 @@
+#include <iostream>
+#include <vector>
+#include <cstring>
+using namespace std;
+
+#pragma warning(disable:4996)
+
+int one = 0, zero = 0, mi = 0;
+vector< vector<int> >picture;
+void search_number( int size, int x, int y) {
+	int start_color = picture[y][x];
+	for (int i = 0; i < size; i++) {
+		for (int j = 0; j < size; j++) {
+			if (picture[y + i][x + j] != start_color)	// 진행중에 색이 다르면
+			{
+				search_number(size / 3, x, y);
+				search_number(size / 3, x+size/3, y);
+				search_number(size / 3, x + (size / 3)*2, y);
+				search_number(size / 3, x, y + size / 3);
+				search_number(size / 3, x + size / 3, y + size / 3);
+				search_number(size / 3, x + (size / 3)*2, y + size / 3);
+				search_number(size / 3, x, y + (size / 3) * 2);
+				search_number(size / 3, x+ size / 3, y + (size / 3) * 2);
+				search_number(size / 3, x + (size / 3) * 2, y + (size / 3) * 2);
+				return;
+			}
+		}
+	}
+	if (start_color == 1) one++;
+	else if (start_color == 0) zero++;
+	else mi++;
+
+}
+int main() {
+	freopen("sample_input.txt", "r", stdin);
+	int size;
+
+	cin >> size;
+	if (size%3 != 0) return -1;
+	vector<int> temp(size, 0);
+	picture.resize(size, temp);
+	
+	for (int i = 0; i < size; i++) {
+		for (int j = 0; j < size; j++)
+			cin >> picture[i][j];
+	}
+
+	search_number( size, 0, 0);
+
+	cout << mi << endl << zero << endl << one << endl;
+	
+	return 0;
+}

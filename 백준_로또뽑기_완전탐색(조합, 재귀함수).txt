@@ -1,0 +1,94 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+#pragma warning(disable:4996)
+using namespace std;
+//int maxone = 0;
+//
+//void pick(int n, int topick, vector<int>& list, vector<int>& picked, vector<int>& check) {
+//
+//	if (topick == 0) {
+//		int temp;
+//		int p = 0;
+//		for (int j = 0; j < n-1; j ++)
+//		{
+//			temp = picked[j] - picked[j + 1];
+//			if (temp < 0) temp *= -1;
+//			p += temp;
+//		}
+//		maxone = maxone > p ? maxone : p;
+//		return;
+//	}
+//
+//	for (int i = 0; i < n; i++) {
+//		if (check[i] == 0) {
+//			check[i] = 1;
+//			picked.push_back(list[i]);
+//			pick(n, topick - 1, list, picked, check); 
+//			check[i] = 0;
+//			picked.pop_back();
+//		}
+//		
+//	}
+//
+//
+//}
+//
+//int main() {
+//	//freopen("sample_input.txt", "r", stdin);
+//	vector<int> list;
+//	vector<int> picked;
+//	vector<int> check;
+//	int a;
+//	cin >> a;
+//	if (a < 3 || a > 8) return -1;
+//	list.resize(a, 0);
+//	check.resize(a, 0);
+//
+//	for (int i = 0; i < a; i++)
+//		cin >> list[i];
+//	pick(a, a, list, picked, check);
+//	cout << maxone << endl;
+//}
+
+void pick(int n, vector<int> list, vector<int>& check, vector<int>& picked, int topick)
+{
+
+	if (topick == 0) {
+		for (int j = 0; j < 6; j++)
+			cout << picked[j] << " ";
+		cout << endl;
+		return;
+	}
+
+	for (int i = 0; i < n; i++) {
+		int temp = picked.empty() ? 0 : picked.back();
+		if (check[i] == 0 && list[i] > temp) {
+			check[i] = 1;
+			picked.push_back(list[i]);
+			pick(n, list, check, picked, topick - 1);
+			check[i] = 0;
+			picked.pop_back();
+		}
+				
+	}
+	
+}
+int main() {
+	freopen("sample_input.txt", "r", stdin);
+	int num = 0;
+	vector<int> list, check;
+	vector<int> picked;
+	for (;;) {
+		cin >> num;
+		if (!num) break;
+		list.resize(num, 0);
+		check.resize(num, 0);
+		picked.clear();
+		for (int i = 0; i < num; i++)
+			cin >> list[i];
+		pick(num, list, check, picked, 6);
+		cout << endl;
+	}
+}

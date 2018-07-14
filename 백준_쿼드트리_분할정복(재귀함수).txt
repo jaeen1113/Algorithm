@@ -1,0 +1,50 @@
+#include <iostream>
+#include <vector>
+#include <cstring>
+using namespace std;
+
+#pragma warning(disable:4996)
+
+void quardtree(vector< vector<char> >picture, vector<char>& code, int size, int x, int y) {
+	
+	int breaker = 1;
+	char start_color = picture[y][x];
+	for (int i = 0; i < size && breaker; i++) {
+		for (int j = 0; j < size; j++) {
+			if (picture[y + i][x + j] != start_color)	// 진행중에 색이 다르면
+			{
+				code.push_back('(');
+				quardtree(picture, code, size/2, x, y);
+				quardtree(picture, code, size/2, x+size/2, y);
+				quardtree(picture, code, size/2, x, y+size/2);
+				quardtree(picture, code, size/2, x+size/2, y+size/2);
+				code.push_back(')');
+				return;
+			}
+		}
+	}
+
+	code.push_back(start_color);
+	
+}
+int main() {
+	freopen("sample_input.txt", "r", stdin);
+	int size;
+	vector< vector<char> > picture;
+	vector<char> code;
+	cin >> size;
+	if (size < 1 || size > 64) return -1;
+	vector<char> temp(size, '0');
+	picture.resize(size, temp);
+	
+	for (int i = 0; i < size; i++) {
+		for (int j = 0; j < size; j++)
+			cin >> picture[i][j];
+	}
+	quardtree(picture, code, size, 0, 0);
+
+	for (int i = 0; i < code.size(); i++)
+		cout << code[i];
+	cout << endl;
+	return 0;
+}

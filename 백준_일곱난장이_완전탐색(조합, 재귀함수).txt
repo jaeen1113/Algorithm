@@ -1,0 +1,51 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+#pragma warning(disable:4996)
+using namespace std;
+
+int sum_all(vector<int> picked) {
+	int i = 0;
+	for (int j = 0; j < 7; j++)
+		i += picked[j];
+	return i;
+}
+int find_i(int a, vector<int> list) {
+	for (int i = 0; i < list.size(); i++)
+	{
+		if (list[i] == a)
+			return i;
+	}
+
+	return -1;
+}
+
+void pick(int n, vector<int> list, vector<int>& checked, vector<int>& picked, int topick) {
+	if (topick == 0 && sum_all(picked) == 100) {
+		for (int j = 0; j < 7; j++)
+			cout << picked[j] << endl;
+		return;
+	}
+	int biggest = picked.empty() ? 0 : find_i(picked.back(), list)+1;
+
+	for (int i = biggest; i < 9; i++) {
+		picked.push_back(list[i]);
+		pick(n, list, checked, picked, topick-1);
+		picked.pop_back();
+	}
+
+}
+
+int main() {
+	//freopen("sample_input.txt", "r", stdin);
+	vector<int> list, checked, picked;
+	list.resize(9, 0);
+	checked.resize(9, 0);
+	for (int i = 0; i < 9; i++)
+		cin >> list[i];
+
+	sort(list.begin(), list.end());
+
+	pick(9, list, checked, picked, 7);
+}

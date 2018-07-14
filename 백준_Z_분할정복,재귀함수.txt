@@ -1,0 +1,41 @@
+#include <iostream>
+#include <vector>
+#include <math.h>
+#pragma warning(disable:4996)
+using namespace std;
+int n, ab_x, ab_y;
+int counter = 0;
+bool find(int size, int x, int y) {
+	if (size != 2) {
+		if(find(size / 2, x, y)) return true;
+		if (find(size / 2, x + size / 2, y)) return true;
+		if(find(size / 2, x, y+ size / 2)) return true;
+		if(find(size / 2, x+ size / 2, y+ size / 2)) return true;
+		return false;
+	}
+
+	int current_x = x, current_y = y;
+	counter++;
+	if (current_x == ab_x && current_y == ab_y) return true;
+	counter++;
+	if (current_x + 1 == ab_x && current_y == ab_y) return true;
+	counter++;
+	if (current_x == ab_x && current_y+1 == ab_y)return true;
+	counter++;
+	if (current_x+1 == ab_x && current_y+1 == ab_y ) return true;
+
+	return false;
+}
+
+int main() {
+	
+	cin >> n;
+	cin >> ab_y;
+	cin >> ab_x;
+
+	int size = pow(2, n);
+
+	find(size, 0, 0);
+	cout << counter-1 << endl;
+
+}
