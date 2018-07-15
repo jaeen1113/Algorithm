@@ -1,0 +1,28 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#pragma warning(disable:4996)
+using namespace std;
+string s;
+int cache[300];
+int max_su(int start) {
+	int& ret = cache[start+1];
+	if (ret != -1) return ret;
+
+	ret = 1;
+
+	for (int i = start + 1; i < s.size(); i++) 
+		if (start == -1 || s[start] < s[i])
+			ret = max(ret, max_su(i)+1);	// 뒤에서 부터 탐색해 오면서 현지점부터 끝까지의 연속증가되는 길이 cache에 저장
+	
+	return ret;
+	
+}
+int main() {
+	freopen("sample_input.txt", "r", stdin);
+	getline(cin, s);
+	memset(cache, -1, sizeof(cache));
+	cout << max_su(-1);
+}
+

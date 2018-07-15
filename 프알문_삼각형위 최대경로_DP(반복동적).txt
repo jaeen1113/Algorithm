@@ -1,0 +1,41 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#pragma warning(disable:4996)
+using namespace std;
+int maxi(vector<int> dp) {
+	int ret = 0;
+	for (int i = 0; i < dp.size(); i++)
+		ret = ret > dp[i] ? ret : dp[i];
+	return ret;
+}
+int main() {
+	freopen("sample_input.txt", "r", stdin);
+	int line;
+	cin >> line;
+	vector<int> dp(line, 0);
+	vector<int> cu(line, 0);
+	for (int i = 0; i < line; i++) {
+		int length;
+
+		cin >> length;
+
+		for (int j = 0; j < length; j++)
+		{
+			int now;
+			cin >> now;
+			
+			if (j == 0) 
+				cu[0] = dp[0]+ now;
+			
+				
+			else 
+				cu[j] = max(dp[j - 1], dp[j]) + now; 
+		}		
+		dp = cu;
+		cu.clear();
+		cu.resize(line, 0);
+	}
+
+	cout << maxi(dp) << endl;
+}

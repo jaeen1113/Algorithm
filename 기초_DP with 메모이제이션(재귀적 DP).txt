@@ -1,0 +1,30 @@
+1. 문제를 완전탐색 방법으로 1차 구현
+2. 중복 탐색, 계산 되는 case를 조건문으로 처리하여 cache에서 값 있는지 탐색-> 있으면 그거 바로 반환
+3. 없으면 완전탐색으로 진행(이때의 return 값을 cache로 바로 저장하게끔 'int&' 변수 사용)
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#pragma warning(disable:4996)
+using namespace std;
+
+int cache[100][100];
+string sen;
+int bibo(int a, int b){
+
+	// 기저사례 case
+	if (a == 0 || b == a) return 1;
+	// 이미 그 하단부까지 다녀온 중간 case의 경우 답을 그대로 return 해버림
+	int& ret = cache[a][b];
+	if (ret != -1) return cache[a][b];
+
+	// 아직 확인 못한 case라면 완전 탐색을 위한 분기 시작.
+	// 여기서 ret(cache[a][b])에 대한 업데이트 까지 해줌.
+	return ret = bibo(a - 1, b - 1) + bibo(a-1, b);
+	}
+
+int main() {
+	memset(cache, -1, sizeof(cache));
+	cout << bibo(10, 9) << endl;
+}
