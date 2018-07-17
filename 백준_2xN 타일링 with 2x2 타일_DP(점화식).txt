@@ -1,0 +1,33 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#define ull unsigned long long 
+#pragma warning(disable:4996)
+using namespace std;
+vector<int> cache;
+vector<int> N;
+ ull dp[1000];
+vector< vector<long long> > super_big;
+
+int main() {
+//	freopen("sample_input.txt", "r", stdin);
+	int a;
+	cin >> a;
+	if (a < 0 || a >250) return -1;
+	dp[0] = 1;
+	dp[1] = 3;
+	dp[2] = 5;
+	for (int i = 3; i < a; i++)
+	{
+		dp[i] = dp[i - 2] * 2 + dp[i - 1];
+
+	}
+
+
+	
+
+	cout << dp[a-1];
+
+
+}
