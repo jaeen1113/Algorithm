@@ -1,0 +1,29 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+int D[1001] = {0,};	// 최대 수익
+vector<int> set_price; // 세트 가격
+
+int main() {
+	int n;
+	cin >> n;
+
+	if (n <1  || n>1000) return -1;
+	
+	set_price.resize(n+1);
+	
+	for (int i = 1; i <= n; i++)
+	{
+		cin >> set_price[i];
+		if (set_price[i] > 10000 || set_price[i] < 1) return -1;
+	}
+
+	for (int i = 1; i <= n; i++)
+		for (int j = 1; j <= i; j++)
+			D[i] = max(D[i], D[i - j] + set_price[j]);
+	cout << D[n];
+
+}

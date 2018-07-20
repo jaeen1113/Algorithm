@@ -1,0 +1,31 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+int D[100] = {0,};
+int ott(int n) {
+	// 기저 case(n == 1일때와 2, 3일때)를 미리 입력해줬으니까 신경 안써두 됨
+	int& ret = D[n];
+	if (ret != 0) return ret;
+
+	return ret = ott(n - 1) + ott(n - 2) + ott(n - 3);
+
+}
+int main() {
+	int n;
+	cin >> n;
+	
+	D[1] = 1;
+	D[2] = 2;
+	D[3] = 4;
+	for (int i = 0; i < n; i++)
+	{
+		int temp;
+		cin >> temp;
+		if (temp < 0 || temp >= 11) return -1;
+		cout << ott(temp) << endl;
+	}
+
+}

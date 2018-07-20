@@ -1,0 +1,25 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#pragma warning(disable:4996)
+
+using namespace std;
+int DP[100];
+int tiling(int n) {
+	// 기저 case(n == 1일때와 2일때)를 미리 입력해줬으니까 신경 안써두 됨
+	int& ret = DP[n];
+	if (ret != -1) return ret;
+	
+	return ret = tiling(n-1) + 2*tiling(n-2);
+
+}
+int main() {
+	int n;
+	cin >> n;
+	memset(DP, -1, sizeof(DP));
+	DP[1] = 1;
+	DP[2] = 3;
+
+    cout <<	tiling(n);
+}
