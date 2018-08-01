@@ -1,0 +1,62 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#pragma warning(disable:4996)
+
+using namespace std;
+
+
+int need[100];		// item의 절박도
+int cache[100][100];
+int volume[100];	// item의 크기
+string name[100];
+int N, W;				// item 갯수
+vector< pair<string, int> > picked;
+int pack(int capacity, int item) {
+	if (item == N) return 0;
+	int &ret = cache[capacity][item]; // 남은 용량이 capacity만큼이고, 현재 item번째의 물건을 담을지 고려중인 상황에서의 최대 절박도
+	if (ret != -1) return ret;
+
+	ret = pack(capacity, item + 1); // 현재 item을 담지 않을 때의 최대 만족도
+
+	if (capacity >= need[item]) // 현재 item을 담아도 될만큼 여유공간이 있을경우에
+		ret = max(ret, pack(capacity-volume[item], item+1) + need[item]);	// 현재 아이템을 안 담은 경우 최대 절박도 vs (현재 아이템을 담고, 다음 아이템을 담을지 고려하는 상황에서 최대 절박도)
+	
+	return ret;
+}
+
+void recon(int capacity, int item, vector< pair<string, int> >& picked) {
+	if (item ==N) return;
+	if (pack(capacity, item) == pack(capacity, item + 1))
+		recon(capacity, item + 1, picked);
+	else
+	{
+		picked.push_back(pair<string, int>(name[item], need[item]));
+		recon(capacity - volume[item], item + 1, picked);
+	}
+}
+
+int main() {
+	freopen("sample_input.txt", "r",stdin);
+	cin >> N;
+	cin >> W;
+	memset(cache, -1, sizeof(cache));
+
+	for (int i = 0; i < N; i++)
+		cin >> name[i] >>  volume[i] >> need[i];
+	
+
+	recon(W, 0, picked);
+	int sum = 0;
+	cout << "고른 물건 수 : " << picked.size() << endl;
+	for (int i = 0; i < picked.size(); i++) {
+		sum += picked[i].second;
+		cout << picked[i].first << endl;
+	}
+	cout << "최종 만족도 : " << sum << endl;
+
+
+
+}
+

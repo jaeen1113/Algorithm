@@ -1,0 +1,61 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <cstring>
+#include <algorithm>
+#pragma warning(disable:4996)
+using namespace std;
+
+int sum = 0;
+int msize;
+vector< vector<char> > jido;
+vector<int> lis;
+bool possibility_check(int y, int x) {
+	if (y < 0 || x < 0 || y >= msize || x >= msize) return false;
+	if (jido[y][x] == '0') return false;
+	return true;
+}
+void solve(int y, int x) {
+	if (!possibility_check(y, x)) return ;
+
+	jido[y][x] = '0';
+	sum++;
+
+	solve(y, x+1);
+	solve(y, x-1);
+	solve(y+1, x);
+	solve(y-1, x);
+
+	return ;
+}
+int main() {
+	freopen("sample_input.txt", "r", stdin);
+	cin >> msize;
+
+	
+	jido.resize(msize, vector<char>(msize,0));
+
+	for (int i = 0; i < msize; i++) {
+		for (int j = 0; j < msize; j++)
+			cin >> jido[i][j];
+	}
+
+	for (int i = 0; i < msize; i++) {
+		for (int j = 0; j < msize; j++) {
+			if (jido[i][j] != '0')
+				solve(i, j);
+			if (sum > 0)
+			{
+				lis.push_back(sum);
+				sum = 0;
+			}
+		}
+	}
+	sort(lis.begin(), lis.end());
+	cout << lis.size() << endl;
+	for (int i = 0; i < lis.size(); i++)
+		cout << lis[i] << endl;
+
+
+
+}

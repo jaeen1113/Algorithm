@@ -1,0 +1,27 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <cstring>
+#include <algorithm>
+#include <bitset>
+#pragma warning(disable:4996)
+using namespace std;
+int main (){
+	int fullpizza = (1 << 20) - 1;
+
+	int topping_num = 0;
+	int number; 
+	while (1) {
+		cout << "제외할 토핑 번호를 입력(주문 종료는 99) : ";
+		cin >> number;
+		if (number == 99) break;
+		topping_num |= (1 << number);
+	}
+	
+
+	fullpizza &= ~topping_num;
+
+	cout << bitset<32>(fullpizza) << endl;
+
+	
+}

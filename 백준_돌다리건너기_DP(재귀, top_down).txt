@@ -1,0 +1,55 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#pragma warning(disable:4996)
+
+#define angel_bridge 1
+#define devil_bridge 0
+using namespace std;
+short max3(short a, short b, short c) {
+	short temp = a > b ? a : b;
+	return temp > c ? temp : c;
+}
+string bridge[2];
+string scroll;
+int cache[2][101][20];
+
+int solve(int st, int before_bridge, int tospell) {
+	if (tospell == scroll.size()) return 1;
+
+	int &ret = cache[before_bridge][st][tospell];
+	if (ret != -1) return ret;
+	
+	ret = 0;
+
+	// 현재 스크롤 글자가 있는가 ?
+	for (int cu = st; cu < bridge[!before_bridge].size(); cu++)
+		if (bridge[!before_bridge][cu] == scroll[tospell]) {
+			ret += solve(cu+1, !before_bridge, tospell+1);
+		}
+
+	// 다른 다리에 건너뛸 돌이 없으면
+	return ret;
+	
+}
+
+int main() {
+	freopen("sample_input.txt", "r", stdin);
+	int ret =0;
+	memset(cache, -1, sizeof(cache));
+
+	getline(cin, scroll);
+	if (scroll.size() < 1 || scroll.size() > 20) return -1;
+
+	getline(cin, bridge[0]);
+	getline(cin, bridge[1]);
+	if (bridge[0].size() < 1 || bridge[0].size() > 100) return -1;
+
+
+	ret += solve(0, 1, 0);
+	ret += solve(0, 0, 0);
+
+	cout << ret;
+
+}

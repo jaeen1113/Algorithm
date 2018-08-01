@@ -1,0 +1,34 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <cstring>
+#include <algorithm>
+#include <bitset>
+#include <cmath>
+#define YES (1<<26)-1
+#pragma warning(disable:4996)
+using namespace std;
+
+int explodes[100];
+int n;
+
+bool isStable(int set) {
+	for (int i = 0; i < n; i++) 
+		if ((set & (1 << i)) && (set & explodes[i])) // set에 i번째 원소가 있거나, 현재 set에 i와 두면 터지는 explod가 있으면 
+			return false;
+	return true;
+}
+
+int count_stable() {
+	int ret = 0;
+	for (int set = 1; set < (1 << n); set++) {
+		if (!isStable(set)) continue;	// stable하지 않으면 count X
+		bool canExtend = false;
+		for (int add = 0; add < n; add++) {
+			if ((set & (1 << add)) == 0 && (explodes[add] & set) == 0)	//add 원소가 set에 있지도 않고 같이둘때 터지는 원소가 set에 없으면
+			{	canExtend = true; break;	}
+		}
+		if (!canExtend)ret++;
+	}
+	return ret;
+}

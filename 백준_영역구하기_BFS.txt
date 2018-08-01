@@ -1,0 +1,63 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <cstring>
+#include <algorithm>
+#pragma warning(disable:4996)
+using namespace std;
+int jido[100][100];
+vector<int> li;
+int m, n, k;
+
+int sum = 0;
+
+bool inner(int y, int x) {
+	if (y < 0 || x < 0 || y >= m || x >= n) return false;
+	if (jido[y][x] == 1) return false;
+
+	return true;
+}
+void mbfs(int y, int x) {
+	if(inner(y, x) == false) return ;
+	
+	sum++;			// 면적 크기 증가
+	jido[y][x] = 1;	// 지도 색칠
+	// 현재 자리에서 상하좌우로 이동
+	mbfs(y, x-1);
+	mbfs(y, x+1);
+	mbfs(y-1, x);
+	mbfs(y+1, x);
+	return;
+}
+int main()
+{
+	freopen("sample_input.txt", "r", stdin);
+	cin >> m >> n >> k;
+
+	memset(jido, 0, sizeof(jido));
+	for (int i = 0; i < k; i++) {
+		int x1, y1, x2, y2;
+		cin >> x1 >> y1 >> x2 >> y2;
+
+		for (int a = y1; a < y2; a++)
+			for (int b = x1; b < x2; b++)
+				jido[a][b] = 1;
+	}
+
+
+
+	for (int i = 0; i < m; i++) {
+		for (int j = 0; j < n; j++) {
+			if (jido[i][j] != 1)
+				mbfs(i, j);
+			if (sum > 0) {
+				li.push_back(sum);
+				sum = 0;
+			}
+		}
+	}
+	sort(li.begin(), li.end());
+	cout << li.size() << endl;
+	for (int i = 0; i < li.size(); i++)
+		cout << li[i] << " ";
+}
