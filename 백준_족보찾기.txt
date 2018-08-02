@@ -1,0 +1,60 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <bitset>
+#include <cmath>
+#include <stack>
+#pragma warning(disable:4996)
+using namespace std;
+string king;
+int people, princess;
+int next_king_per = 1;
+
+
+vector< pair<string, double> > royal;
+vector<string> candidate;
+
+int find_royal(string name) {
+	for (int i = 0; i < royal.size(); i++)
+		if (royal[i].first == name)
+			return i;
+	return -1;
+}
+int main() {
+	freopen("sample_input.txt", "r", stdin);
+
+	scanf("%d %d", &people, &princess);
+	cin >> king;
+	royal.push_back(pair<string, double>(king, 1));
+	candidate.resize(princess);
+
+	for (int i = 0; i < people; i++)
+	{
+		string name, p1, p2;
+		cin >> name >> p1 >> p2;
+		int h1 = find_royal(p1), h2 = find_royal(p2);
+
+		if (h1 != -1 && h2 != -1) // 부모가 둘다 왕족이면 
+			royal.push_back(pair<string, double>(name, (royal[h1].second + royal[h2].second) / 2 ));
+		else if(h1 == -1) // 한쪽만 왕족인 케이스
+			royal.push_back(pair<string, double>(name, royal[h2].second / 2));
+		else
+			royal.push_back(pair<string, double>(name, royal[h1].second / 2));
+	}
+
+
+		
+	for (int i = 0; i < princess; i++)
+	{
+		string me;
+		cin >> me;
+		if (royal[find_royal(me)].second < next_king_per)
+			king = me;
+	}
+
+	cout << king << endl;;
+
+
+}

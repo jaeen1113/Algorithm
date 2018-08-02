@@ -1,0 +1,63 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <cstring>
+#include <algorithm>
+#include <bitset>
+#include <cmath>
+#include <stack>
+#define ull unsigned long long
+#pragma warning(disable:4996)
+using namespace std;
+int arr[100001];
+
+int find_smallest(int st, int end) {
+	int ret = 1000000001;
+	int ret2 = 0;
+	for (int i = st; i <= end; i++) {
+		if (ret > arr[i])
+		{
+			ret = arr[i];
+			ret2 = i;
+		}
+	}
+	return ret2;
+}
+
+ull max3(int a, int b, int c) {
+	ull temp = a > b ? a : b;
+	return temp > c ? temp : c;
+}
+
+ull solve(int st, int end) {
+
+	if (end - st == 0) return 0;
+
+	ull ret = 0;
+	int smallest = find_smallest(st, end);
+	ret = arr[smallest] * (end - st + 1);
+
+	int left_side = smallest - 1, right_side = smallest + 1;
+
+	if (left_side < st) left_side = st;
+	if (right_side > end) right_side = end;
+
+	ret = max3(ret, solve(right_side, end), solve(st, left_side));
+	return ret;
+}
+
+int main() {
+	//freopen("sample_input.txt", "r", stdin);
+
+	while (1) {
+		int size;
+
+		cin >> size;
+		if (!size) return 0;
+
+		for (int i = 0; i < size; i++)
+			cin >> arr[i];
+		
+		cout << solve(0, size - 1)<<endl;
+	}
+}

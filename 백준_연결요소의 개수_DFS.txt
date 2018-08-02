@@ -1,0 +1,56 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <cstring>
+#include <algorithm>
+#include <bitset>
+#include <cmath>
+#include <stack>
+#pragma warning(disable:4996)
+using namespace std;
+int v, e;
+int check[1001] = {0,};
+stack<int> s;
+vector<int> jido[1001];
+void dfs(int st) {
+	s.push(st);
+	check[st] = 1;
+
+	while (!s.empty()) {
+		int here = s.top();
+		s.pop();
+
+		for (int i = 0; i < jido[here].size(); i++) {
+			if (!check[jido[here][i]])
+			{
+				check[jido[here][i]] = 1;
+				s.push(jido[here][i]);
+			}
+		}
+	}
+}
+
+int main() {
+
+	freopen("sample_input.txt", "r", stdin);
+
+	scanf("%d %d", &v, &e);
+	int ret = 0;
+	memset(check, 0, sizeof(check));
+
+	for (int i = 1; i <= e; i++) {
+		int a, b;
+		scanf("%d %d", &a,&b);
+		jido[a].push_back(b);
+		jido[b].push_back(a);
+	}
+
+	for (int i = 1; i <= v; i++) {
+		if (!check[i])
+		{
+			dfs(i);
+			ret++;
+		}
+	}
+	printf("%d", ret);
+}

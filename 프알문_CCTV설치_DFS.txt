@@ -1,0 +1,73 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <cstring>
+#include <algorithm>
+#include <bitset>
+#include <cmath>
+#include <stack>
+#pragma warning(disable:4996)
+using namespace std;
+int g, h;
+vector< vector<int> >gallery;
+int watch[100] = {0,};
+
+stack<int> s;
+int min2(int a, int b) {
+	return a < b ? a : b;
+}
+void set_camera(int here) {
+	for (int i = 0; i < gallery[here].size(); i++) {
+		if(!watch[gallery[here][i]])
+			s.push(gallery[here][i]); // 현재 위치 주변 방들 중 unwatched의 번호를 push(방문 안한 곳이니까 )
+		watch[gallery[here][i]] = 1;
+	}
+	watch[here] = 1;
+}
+
+int dfs(int c){
+	int installed = 0;
+	int count = 0;
+
+	s.push(c);
+	while (!s.empty()) {
+		int here = s.top();
+		s.pop();
+
+		// 현 위치에 연결된 방중에 unwatched가 있으면 카메라 설치
+		bool can = false;
+		for (int i = 0; i < gallery[here].size(); i++) {
+			if (watch[gallery[here][i]] == 0)
+			{		can = true;  break;		}
+		}
+		if (can) {
+			set_camera(here);
+			installed++;
+		}
+	}
+	return installed;
+}
+
+
+int main() {
+	freopen("sample_input.txt", "r", stdin);
+
+	int C; scanf("%d", &C);
+	for (int i = 0; i < C; i++) {
+
+		scanf("%d %d", &g, &h);
+		gallery.clear();
+		gallery.resize(g, vector<int>());
+		memset(watch, 0 , sizeof(watch));
+		for (int j = 0; j < h; j++) {
+			int t1, t2;
+			scanf("%d %d", &t1, &t2);
+			gallery[t1].push_back(t2);
+			gallery[t2].push_back(t1);
+
+		}
+
+		
+		printf("Case %d: 최소한 %d개의 카메라가 필요!\n", i, dfs(0));
+	}
+}
