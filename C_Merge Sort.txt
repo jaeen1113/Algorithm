@@ -1,0 +1,73 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stack>
+#pragma warning(disable:4996)
+
+int merge[100];
+int sub[100];
+int n;
+
+void merge_sort() {
+	int current_window = 1;
+	int dung = n;
+	int temp;
+	while (1) {
+		if (current_window == n)
+			break;
+		
+		memcpy(sub, merge, sizeof(merge));
+		// i = 현재 윈도우 크기로 나눈 것 수 (덩어리수)
+		for (int i = 0; i < n / current_window; i += 2) {
+			int a = 0; // i * current_window;
+			int b = 0; // (i + 1) * current_window;
+
+			while (1) { // 두 덩어리를 비교후 병합
+			
+				if (merge[a + i * current_window] > merge[b + (i + 1)*current_window])
+				{
+					sub[(i*current_window) + a + b] = merge[b + (i + 1)*current_window];
+					b++;
+				}
+				else {
+					sub[(i*current_window) + a + b] = merge[a + i*current_window];
+					a++;
+				}
+
+				if ((a == current_window || b == current_window)) // 둘중 하나라도 먼저 병합하기를 끝마치면 남아있는 애들은 끝에 붙이면 됨
+				{
+					if (a < b) {
+						for (; a < current_window; a++) {
+							sub[(i*current_window) + a + b] = merge[a + i * current_window];
+						}
+					}
+
+					else if (a > b) {
+						for (; b < current_window; b++) {
+							sub[(i*current_window) + a + b] = merge[b + (i + 1) * current_window];
+						}
+					}
+					else;
+
+					break;
+				}
+			}
+		}
+		current_window *= 2;
+		memcpy(merge, sub, sizeof(sub));	
+
+	}
+}
+int main() {
+	freopen("sample_input.txt", "r", stdin);
+	scanf("%d", &n);
+	memset(merge, 0, sizeof(merge));
+
+	for (int i = 0; i < n; i++)
+		scanf("%d", &merge[i]);
+
+	merge_sort();
+
+	for (int i = 0; i < n; i++)
+		printf("%d " , merge[i]);
+}

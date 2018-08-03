@@ -1,0 +1,53 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#pragma warning(disable:4996)
+
+int arr[10];
+void quicksort(int st, int end) {
+	if (st >= end) return;
+	int temp;
+	int pivot = end;
+	int i = st;
+	int j = end - 1;
+
+	while (1) {
+		while (arr[i] < arr[pivot]) // 피벗보다 큰 값을 찾는다
+			i++;
+		while (arr[j] > arr[pivot]) // 피벗보다 작은 값을 찾는다.
+			j--;
+
+		if (i > j) {	// i가 j를 넘어가면, i위치의 값과 pivot위치의 값을 swap한다.
+			temp = arr[i];
+			arr[i] = arr[pivot];
+			arr[pivot] = temp;
+			break;
+		}
+		else {			// i가 j를 넘지 않을 때는 i자리와 j자리 값을 swap
+			temp = arr[i];
+			arr[i] = arr[j];
+			arr[j] = temp;
+		}
+	}
+
+	quicksort(st, i - 1); // 바뀐 pivot자리 왼쪽 블록 정렬 시작
+	quicksort(i + 1, end); // 바뀐 pivot자리 오른쪽 블록 정렬 시작 
+
+}
+
+int main() {
+	int n;
+	int i = 0;
+
+	scanf("%d", &n);
+
+
+	for (i = 0; i < n; i++)
+		scanf("%d", &arr[i]);
+
+	quicksort(0, n-1);
+
+	for (i = 0; i < n; i++)
+		printf("%d ", arr[i]);
+
+}
