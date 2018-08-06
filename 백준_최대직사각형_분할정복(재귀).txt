@@ -1,63 +1,55 @@
 #include <iostream>
-#include <queue>
 #include <vector>
 #include <cstring>
-#include <algorithm>
-#include <bitset>
-#include <cmath>
-#include <stack>
-#define ull unsigned long long
+#define  ull unsigned long long
 #pragma warning(disable:4996)
-using namespace std;
-int arr[100001];
 
+using namespace std;
+int arr[1000001] = { 0, };
 int find_smallest(int st, int end) {
 	int ret = 1000000001;
-	int ret2 = 0;
-	for (int i = st; i <= end; i++) {
-		if (ret > arr[i])
+	int pointer = 0;
+	for (int i = st; i <= end; i++)
+	{
+		if (arr[i] < ret)
 		{
 			ret = arr[i];
-			ret2 = i;
+			pointer = i;
 		}
 	}
-	return ret2;
+
+	return pointer; 
 }
-
-ull max3(int a, int b, int c) {
-	ull temp = a > b ? a : b;
-	return temp > c ? temp : c;
+int max3(int a, int b, int c) {
+	int t = a > b ? a : b;
+	return t > c ? t : c;
 }
+ull histogram(int st, int end) {
+	if (st == end) return arr[st];
 
-ull solve(int st, int end) {
-
-	if (end - st == 0) return 0;
-
-	ull ret = 0;
-	int smallest = find_smallest(st, end);
-	ret = arr[smallest] * (end - st + 1);
-
-	int left_side = smallest - 1, right_side = smallest + 1;
-
-	if (left_side < st) left_side = st;
-	if (right_side > end) right_side = end;
-
-	ret = max3(ret, solve(right_side, end), solve(st, left_side));
-	return ret;
+	int smallest = find_smallest(st, end); // 제일 낮은 bar 위치 찾기
+	int left = smallest - 1 < st ? st : smallest - 1;
+	int right = smallest + 1 > end ? end : smallest + 1;
+	return max3(arr[smallest]*(end-st+1), histogram(st, left), histogram(right, end));
 }
 
 int main() {
-	//freopen("sample_input.txt", "r", stdin);
-
+	freopen("sample_input.txt", "r", stdin);
+	
 	while (1) {
-		int size;
+		int num;
+		cin >> num;
+		if (!num) return 0;
 
-		cin >> size;
-		if (!size) return 0;
+		memset(arr, 0, sizeof(arr));
 
-		for (int i = 0; i < size; i++)
+		for (int i = 0; i < num; i++)
 			cin >> arr[i];
-		
-		cout << solve(0, size - 1)<<endl;
+
+		cout << histogram(0, num - 1) << endl;
+
 	}
+
+
+
 }

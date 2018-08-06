@@ -1,0 +1,62 @@
+#include <iostream>
+#pragma warning(disable:4996)
+
+using namespace std;
+
+int heap[100];
+int last = 0;
+void add(int a) {
+	int pointer = last;
+	heap[last++] = a;
+	while (1) {
+		if (heap[pointer] > heap[(pointer - 1) / 2]) {
+			int temp = heap[(pointer - 1) / 2];
+			heap[(pointer - 1) / 2] = heap[pointer];
+			heap[pointer] = temp;
+			pointer = (pointer - 1) / 2;
+		}
+		else
+			break;
+	}
+}
+int delete_max() {
+	int ret = heap[0];
+	int pointer = 0;
+	heap[pointer] = 0;
+	while (1) {
+		if (heap[pointer] < heap[pointer * 2 + 1] || heap[pointer] < heap[pointer * 2 + 2]) {
+			int bigger_child = heap[pointer * 2 + 1] > heap[pointer * 2 + 2] ? pointer * 2 + 1 : pointer * 2 + 2;
+			int temp = heap[bigger_child];
+			heap[bigger_child] = heap[pointer];
+			heap[pointer] = temp;
+
+			pointer = bigger_child;
+		}
+		else
+			break;
+		
+	}
+	return ret;
+}
+int main() {
+	int value;
+	freopen("sample_input.txt", "r", stdin);
+	for (int a = 0; a < 9; a++)
+	{
+		cin >> value;
+		add(value);
+	}
+
+	for (int a = 0; a < 9; a++)
+		cout << heap[a] << " ";
+	cout << endl << delete_max() << endl;
+	for (int a = 0; a < 9; a++)
+		cout << heap[a] << " ";
+	cout << endl << delete_max() << endl;
+	for (int a = 0; a < 9; a++)
+		cout << heap[a] << " ";
+	cout << endl << delete_max() << endl;
+	for (int a = 0; a < 9; a++)
+		cout << heap[a] << " ";
+	
+}
