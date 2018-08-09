@@ -1,0 +1,46 @@
+#include <iostream>
+#include <vector>
+#include <cstring>
+#pragma warning(disable:4996)
+using namespace std;
+
+pair<int, int> heap[100];
+int number = 0;
+void add(pair<int, int> a) {
+	heap[number + 1].first = a.first;
+	heap[number + 1].second = a.second;
+	while (1) {
+		if (heap[number].first > heap[(number - 1) / 2].first) {
+			pair<int, int> temp = heap[(number - 1) / 2];
+			heap[(number - 1) / 2] = heap[number];
+			heap[number] = temp;
+
+			number = (number - 1) / 2;
+		}
+		else break;
+	}
+	number++;
+}
+
+
+pair<int, int> sub() {
+	pair<int, int> ret = heap[0];
+	int pointer = 0;
+	heap[pointer] = pair<int, int>(0,0);
+	while (1) {
+		if (heap[pointer].first < heap[pointer * 2 + 1].first || heap[pointer].first < heap[pointer * 2 + 2].first) // 현재 노드가 자식들의 우선순위보다 작으면 
+		{
+			int next = heap[pointer * 2 + 1].first >= heap[pointer * 2 + 2].first ? pointer * 2 + 1 : pointer * 2 + 2;
+			heap[pointer] = heap[next];
+			heap[next] = pair<int, int>(0, 0);
+
+			pointer = next;			
+		}
+		else break;
+	}
+}
+int main()
+{
+
+
+}

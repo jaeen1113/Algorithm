@@ -1,0 +1,33 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+#pragma warning(disable:4996)
+int m[500][500] = {};
+int t;
+int dp[500][500];
+int max2(int a, int b) {
+	return a > b ? a : b;
+}
+int route(int y, int x) {
+	if (y == t - 1) return m[y][x]; // 최하단 도착시 그 자리값 반환
+
+	int& ret = dp[y][x];
+	if (ret != -1) return ret;
+	ret = max2(route(y+1, x), route(y+1, x+1))+m[y][x];
+	return ret;
+}
+int main() {
+	freopen("sample_input.txt", "r", stdin);
+	memset(dp, -1, sizeof(dp));
+	
+
+	cin >> t;
+
+	for (int i = 0; i < t; i++)
+		for (int j = 0; j < i + 1; j++)
+			cin >> m[i][j];
+	
+	cout << route(0,0);
+
+}

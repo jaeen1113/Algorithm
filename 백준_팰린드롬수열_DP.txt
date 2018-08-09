@@ -1,0 +1,35 @@
+#include <iostream>
+#include <vector>
+#include <cstring>
+#pragma warning(disable:4996)
+using namespace std;
+int arr[5001];
+int dp[5001][5001];
+int min2(int a, int b) {
+	return a > b ? b : a;
+}
+int solve(int st, int end) {
+	if (st > end) return 0; // 더이상 비교할 것이 없으므로 0반환
+
+	int& ret = dp[st][end];
+	if (ret != -1) return ret;
+
+	if (arr[st] == arr[end]) // 양 끝이 동일한 숫자면 할 필요가 없음(정 가운데에 하나 남은 케이스 도 처리 됨)
+		return ret = solve(st + 1, end - 1);
+	else
+		return ret = min2(solve(st + 1, end) + 1, solve(st, end - 1)+1); // 앞에 숫자를 하나 줄이거나 , 뒤에 숫자를 하나 줄인뒤(짝을 맞춰줌) 남은 부분에 대해서 다시 solve 진행
+}
+int main(void)
+{ 
+	freopen("sample_input.txt", "r", stdin);
+	int t;
+	cin >> t;
+
+	memset(dp, -1, sizeof(dp));
+	for (int i = 0; i < t; i++)
+		cin >> arr[i];
+
+	cout << solve(0, t - 1);
+
+
+}

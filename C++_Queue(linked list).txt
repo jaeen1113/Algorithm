@@ -1,0 +1,89 @@
+#include <iostream>
+#include <vector>
+#include <cstring>
+#pragma warning(disable:4996)
+using namespace std;
+
+typedef struct node {
+	int data;
+	node *next;
+	node() {
+		data = 0;
+		next = NULL;
+	}
+};
+
+typedef struct link {
+	node *head;
+	node *tail;
+	
+	link() {
+		head = tail = NULL;
+	}
+	~link() {
+		node *current;
+		while (1) {
+			if (head == tail) {
+				free(head); break;
+			}
+			current = head->next;
+			free(head);
+			head = current;
+		}
+	}
+
+	void push(node* temp) {
+		if (head == NULL) {
+			head = temp;
+			tail = temp;
+		}
+		else {
+			tail->next = temp;
+			tail = temp;
+			tail->next = NULL;
+		}
+	}
+	node* pop() {
+		if (head == NULL)
+			return NULL;
+		node* temp = head;
+		head = head->next;
+		temp->next = NULL;
+		return temp;
+	}
+
+	void print() {
+		node *current = head;
+		if (head == NULL) cout << "nothing" << endl;
+		while (1) {
+			if (current == NULL) break;
+			cout << current->data << "  ";
+			current = current->next;
+		}
+		cout << endl;
+	}
+};
+
+int main() {
+
+	link *mylink = new link();
+	int me;
+	while (1) {
+		cout << "1. add node" << endl << "2. pop node" << endl << "3. end" << endl << "menu : ";
+		cin >> me;
+
+		if (me == 1) {
+			node *temp = new node();
+			cin >> temp->data;
+			mylink->push(temp);
+		}
+
+		else if (me == 2) {
+			cout << "poped data : " << mylink->pop()->data << endl;
+		}
+		else
+			return 1;
+		mylink->print();
+	}
+
+}
