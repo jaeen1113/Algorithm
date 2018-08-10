@@ -1,0 +1,32 @@
+#include <iostream>
+#include <string>
+#include <cstring>
+#include <cstdio>
+#pragma warning(disable:4996)
+
+using namespace std;
+string senten;
+int dp[1001][1001];
+
+int min2(int a, int b) {
+	return a > b ? b : a;
+}
+int palen(int st, int end) {
+	if (st > end) return 0;
+
+	int& ret = dp[st][end];
+	if (ret != -1) return ret; 
+
+
+	if (senten[st] == senten[end])// 양끝이 동일하면 걔들은 빼고 생각합시다
+		return ret = palen(st + 1, end - 1);
+	else
+		return ret = min2(palen(st+1, end) + 1, palen(st, end-1) + 1) ; // 앞이나 뒤에서 하나 빼고(그대신 +1), 남은 부분을 또 보자
+}
+int main() {
+	freopen("sample_input.txt", "r", stdin);
+	getline(cin, senten);
+	memset(dp, -1, sizeof(dp));
+	cout << senten.size() + palen(0, senten.size() - 1);
+
+}

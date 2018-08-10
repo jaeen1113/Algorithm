@@ -1,0 +1,71 @@
+#include <iostream>
+#include <string>
+#include <cstring>
+#include <cstdio>
+#pragma warning(disable:4996)
+
+using namespace std;
+int jido[1001][1001];
+int arr[100000];
+int n, m;
+int arr_num = 0;
+int max3(int a, int b, int c) {
+	int temp = a > b ? a : b;
+	return temp > c ? temp : c;
+}
+void make_arr() {
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < m; j++) {
+			if (jido[i][j]) // 1을 찾으면
+			{
+				for (int k = i; jido[k][j] != 0; k++) // 현재 자리에서 뻗어갈수 있는 최대 높이 찾기
+					arr[arr_num]++;
+				arr_num++;
+			}
+		}
+		arr_num++; // 한 행을 기준으로 덩어리를 만들려고 빈 공간 하나 추가
+	}
+	arr_num-=2;
+}
+
+int find_smallest(int st, int end) {
+	int ret = 9999999;
+	int ret2 = 0;
+	for (int i = st; i <= end; i++)
+	{
+		if (ret > arr[i]) {
+			ret = arr[i];
+			ret2 = i;
+		}
+	}
+	return ret2;
+}
+
+int big_squar(int st, int end) {
+	if (st == end) return 1; // 덩어리 밑변이 1이면 최대 넓이 1을 반환
+
+	int smallest = find_smallest(st, end);
+
+	int line = (end - st + 1) < arr[smallest] ? (end - st + 1) : arr[smallest];
+	int left_side = smallest - 1 < st ? st : smallest - 1;
+	int right_side = smallest + 1 > end ? end : smallest + 1;
+
+	line *= line;
+
+	return max3(line, big_squar(st, left_side), big_squar(right_side, end));
+
+}
+
+int main() {
+	freopen("sample_input.txt", "r", stdin);
+	
+	cin >> n >> m;
+	memset(arr, 0, sizeof(arr));
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++)
+			scanf("%1d", &jido[i][j]);
+
+	make_arr();
+	cout << big_squar(0, arr_num);
+
+}
