@@ -1,0 +1,48 @@
+#include <iostream>
+#include <string>
+#include <cstring>
+#include <vector>
+#include <cmath>
+#pragma warning(disable:4996)
+using namespace std;
+
+bool visit[102]; // 방문여부
+int dist[102][102]; // 각 포인트간 거리
+int point[102][2]; // 각 포인트 좌표(x, y)
+int t, n;
+
+void walk(int v) {
+	visit[v] = true;
+
+	for (int i = 1; i < n + 2; i++) { // 최종저긍로 모든 경우의 수를 다 돌았을 때 visit[n+1]이 찍혀있는지만 보면 됨
+		if (visit[i]) continue;	// 방문하지 않은 곳만 가겠숨
+	
+		if (dist[v][i] <= 1000) // i까지 걸어갈 수 있으면 
+			walk(i);
+	}
+}
+
+int main() {
+	//freopen("sample_input.txt", "r", stdin);
+	cin >> t;;
+	
+	for (int i = 0; i < t; i++) {
+		cin >> n;
+		memset(dist, 0, sizeof(dist));
+		memset(point, 0, sizeof(point));
+		memset(visit, false, sizeof(visit));
+
+		for (int j = 0; j < n + 2; j++)  // 0번째 : 집 ///// n+1번째 : 축제장소
+			cin >> point[j][0] >> point[j][1];
+		
+		for (int j = 0; j < n + 2; j++) // 각각의 지점 별 거리 산출
+			for (int k = j+1; k < n + 2; k++) 
+				dist[j][k] = abs(point[j][0] - point[k][0]) + abs(point[j][1] - point[k][1]);
+			
+		walk(0);
+		if (visit[n+1]) cout << "happy" << endl;
+		else cout << "sad" << endl;
+	}
+    return 0;
+
+}

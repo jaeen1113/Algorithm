@@ -1,0 +1,50 @@
+#include <iostream>
+#include <string>
+#include <cstring>
+#include <vector>
+#pragma warning(disable:4996)
+using namespace std;
+int N;
+
+int people[10001];
+vector<int> map[10001];
+bool visit[10001];
+int max2(int a, int b)
+{
+	return a > b ? a : b;
+}
+
+int dfs(int v, bool great) {
+	int ret = 0;
+	visit[v] = true;
+
+	for (int i = 0; i < map[v].size(); i++) // v번 마을의 인접 마을들 탐색
+	{
+		if (visit[map[v][i]]) continue;// v의 근접 마을인 i번 마을이 이미 방문했으면 다음 마을 ㄱㄱ
+
+		if (great) // 만약 현재 마을이 우수마을이면 
+			ret += dfs(map[v][i], 0); // 인접 마을은 우수마을이 아님 
+		else		// 현재 마을이 우수마을이 아니라면 
+			ret += max2(dfs(map[v][i], false), dfs(map[v][i], true) + people[map[v][i]]); // 다음 마을이 우수마을일 떄와 아닐때중 최대값 
+	}
+
+	visit[v] = false;
+	return ret;
+}
+int main() {
+	//freopen("sample_input.txt", "r", stdin);
+	cin >> N;
+	for (int i = 1; i <= N; i++)
+		cin >> people[i];
+
+	for (int i = 0; i < N - 1; i++)
+	{
+		int st, end;
+		cin >> st >> end;
+		map[st].push_back(end);
+		map[end].push_back(st);
+	}
+
+	cout <<  max2(dfs(1, false), dfs(1, true)+people[1]);
+
+} 
