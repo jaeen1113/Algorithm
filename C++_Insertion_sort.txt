@@ -1,0 +1,46 @@
+#include <iostream>
+#include <cstdio>
+#include <queue>
+#include <cstring>
+#pragma warning(disable:4996)
+using namespace std;
+
+int counter = 0;
+int list[1000];
+//ASC
+void insertion_sort() {
+	int pivot = 0;
+	for (int pivot = 1; pivot < counter; pivot++) {
+		for (int i =0; i < pivot; i++) {
+			if (list[i] > list[pivot])
+			{
+				int temp = list[pivot]; // backup
+				for (int k = pivot; k >= i+1; k--) // 바꿀 위치부터 pivot자리까지 한칸씩 밀기
+					list[k] = list[k - 1];
+				list[i] = temp;
+			}
+
+		}
+		
+	}
+}
+
+int main() {
+	freopen("sample_input.txt", "r", stdin);
+
+	while (1)
+	{
+		int temp;
+		cin >> temp;
+		if (temp == -1)
+			break;
+		list[counter++] = temp;
+	}
+
+	insertion_sort();
+	for (int i = 0; i < counter; i++)
+		cout << list[i] << " " ;
+	cout << endl;
+	
+
+}
