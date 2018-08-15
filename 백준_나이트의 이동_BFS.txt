@@ -1,0 +1,57 @@
+#include <iostream>
+#include <queue>
+#include <cstring>
+#pragma warning(disable:4996)
+using namespace std;
+
+queue <pair<int, int> > s; // 나이트의 위치 정보 들어감
+int check[300][300];
+int board;
+int addx[8] = { 1 ,  2,  2,  1,  -1,  -2,  -2,  -1 };
+int addy[8] = {-2,  -1,  1,  2,   2,   1,  -1,  -2};
+void bfs(pair<int, int> stop) {
+	int counter = 0;
+	
+	while (!s.empty()) {
+		pair<int, int> temp = s.front();
+		s.pop();
+		if (temp == stop)
+		{
+			while (!s.empty()) s.pop();
+			break;
+		}
+		else {
+			
+			for (int i = 0; i < 8; i++) {
+				int next_x = temp.first + addx[i];
+				int next_y = temp.second + addy[i];
+				if (next_x >= 0 && next_x < board && next_y >= 0 && next_y < board) // 움직인 거리가 보드 이내일때에
+				{
+					if (check[next_y][next_x]!=0) // 이미 방문한 곳이면 가지 않음
+						continue;
+					s.push(pair<int, int>(next_x, next_y));
+					check[next_y][next_x] = check[temp.second][temp.first] + 1;
+				}
+			}
+			
+		}
+	}
+}
+
+int main() {
+	//freopen("sample_input.txt", "r", stdin);
+	int t; 
+	cin >> t;
+	while (t--) {
+		cin >> board;
+		memset(check, 0, sizeof(check));
+
+		int x, y;
+		cin >> x >> y;
+		s.push(pair<int ,int>(x, y));
+		cin >> x >> y;
+		bfs(pair<int, int>(x, y));
+
+		cout << check[y][x] << endl;
+	}
+}
