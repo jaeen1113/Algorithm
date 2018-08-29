@@ -1,0 +1,60 @@
+#include <iostream>
+#include <string>
+#include <cstring>
+#include <utility>
+using namespace std;
+#pragma warning(disable:4996)
+
+pair<int, string> list[8000];
+int counter = 0;
+void add(int old, string name) {
+
+	list[counter] = pair<int, string>(old, name);
+	int inner_counter = counter;
+	while (list[inner_counter].first  <  list[(inner_counter-1)/2].first) { // 새로 입력된 아이가 현재의 부모보다 나이가 어리면
+		pair<int, string> temp = list[inner_counter]; // swap
+		list[inner_counter] = list[(inner_counter-1)/2];
+		list[(inner_counter - 1) / 2]= temp;
+		inner_counter = (inner_counter - 1) / 2;
+	}
+	counter++;
+
+}
+
+pair<int, string> pop() {
+	int pivot = 0;
+	pair<int, string> ret = list[pivot];
+	list[pivot] = pair<int, string>(9999,"");
+	while (list[pivot].first > list[pivot * 2 + 1].first || list[pivot].first > list[pivot * 2 + 2].first) { // 자식중에 자기보다 작은 애가 있다면 
+		int smaller = list[pivot * 2 + 1].first <= list[pivot * 2 + 2].first ? pivot * 2 + 1 : pivot * 2 + 2;// 나이가 어리거나 같더라도 먼저온 친구가 나가야 되니까
+		pair<int, string> temp = list[pivot]; // swap
+		list[pivot] = list[smaller];
+		list[smaller] = temp;
+		pivot = smaller;
+	}
+	return ret;
+}
+
+int main() {
+	freopen("sample_input.txt", "r", stdin);
+	int t;
+	int old;
+	string name;
+	cin >> t;
+	cout << sizeof(list[0]) << " " << sizeof(int);
+	for (int i = 0; i < 100005; i++) // 배열 초기화
+		list[i].first = 9999;
+
+	for (int i = 0; i < t; i++) {
+		cin >> old;
+		getline(cin, name);
+		add(old, name);
+	}
+
+
+	for (int i = 0; i < counter; i++)
+	{
+		pair<int, string> temp = pop();
+		cout << temp.first << " " << temp.second << endl;
+	}
+}

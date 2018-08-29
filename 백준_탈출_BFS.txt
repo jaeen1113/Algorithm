@@ -1,0 +1,97 @@
+#include <iostream>
+#include <string>
+#include <cstring>
+#include <vector>
+#include <queue>
+#include <stack>
+using namespace std;
+#pragma warning(disable:4996)
+char map[50][50];
+int check[50][50];
+
+int n, m;
+queue<pair<int, int> > q, water;
+pair<int, int> de;
+int addx[4] = {1, -1, 0, 0};
+int addy[4] = { 0, 0, 1, -1 };
+int bfs() {
+	pair<int, int> current;
+
+	while (!q.empty()) {
+
+		pair<int, int> next_water;
+		int next_water_size = water.size();
+		while(next_water_size--) {
+			next_water = water.front();
+			water.pop();
+			for (int i = 0; i < 4; i++) { // 1. 물 이동 먼저
+				int nx = next_water.second + addx[i];
+				int ny = next_water.first + addy[i];
+
+				// 여기서 도착지점에는 물 안들어가게 설정해주면 될듯
+				if (nx >= 0 && ny >= 0 && nx < m && ny < n && check[ny][nx] == 0 && check[ny][nx] != -2) // 이동 가능한 곳이고 아직 방문 안한 지점에 대해서 
+				{
+					check[ny][nx] = -1;
+					water.push(pair<int, int>(ny, nx));
+				}
+			}
+		}
+		
+
+
+		int next_move_size = q.size();
+		while (next_move_size--) {
+			current = q.front();
+			q.pop();
+			if (current == de)
+				return check[current.first][current.second] - 1;
+			for (int i = 0; i < 4; i++) { // 2. 비버 이동
+				int nx = current.second + addx[i];
+				int ny = current.first + addy[i];
+
+				if (nx >= 0 && ny >= 0 && nx < m && ny < n && (check[ny][nx] == 0|| check[ny][nx] == -2)) // 이동 가능한 곳이고 아직 방문 안한 지점에 대해서 
+				{
+					check[ny][nx] = check[current.first][current.second] + 1;
+					q.push(pair<int, int>(ny, nx));
+				}
+			}
+		}
+	}
+
+	return 0;
+}
+int main() {
+	freopen("sample_input.txt", "r", stdin);
+	cin >> n >> m;
+	memset(check, 0, sizeof(check));
+
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < m; j++) {
+			cin >> map[i][j];
+			if (map[i][j] == 'D')
+			{
+				de = pair<int, int>(i, j);
+				check[i][j] = -2;
+			}
+			if (map[i][j] == 'S')
+			{
+				q.push(pair<int, int>(i, j));
+				check[i][j] = 1;
+			}
+
+			if (map[i][j] == '*')
+			{
+				water.push(pair<int, int>(i, j));
+				check[i][j] = -1;
+			}
+			if (map[i][j] == 'X')
+				check[i][j] = -1;
+		}
+	}
+	
+	int ret = bfs();
+	if (ret == 0)
+		cout << "KAKTUS" << endl;
+	else
+		cout << ret << endl;
+}

@@ -1,0 +1,50 @@
+#include <iostream>
+#include <cstdio>
+#include <queue>
+#include <cstring>
+#pragma warning(disable:4996)
+using namespace std;
+vector<int> map[101];
+int check[101];
+
+int man, st, ed;
+int n;
+queue<int> q;
+int bfs() {
+	check[st] = 0;
+	q.push(st);
+	while (!q.empty()) {
+		int current = q.front();
+		q.pop();
+		if (current == ed) break;
+
+		for (int i = 0; i < map[current].size(); i++) // 방문 가능한 모든 부모 및 자식으로 이동
+		{
+			int next = map[current][i];
+			if (check[next] != -1) continue;
+			
+			q.push(next);
+			check[next] = check[current] + 1;
+		}
+
+	}
+	return check[ed];
+}
+int main() {
+	freopen("sample_input.txt", "r", stdin);
+	cin >> man>> st >> ed;
+	cin >> n;
+	memset(check, -1, sizeof(check));
+	for (int i = 0; i < n; i++)
+	{
+		int a, b; cin >> a >> b;
+		map[a].push_back(b);
+		map[b].push_back(a);
+	}
+
+	cout << bfs();
+
+
+
+
+}
