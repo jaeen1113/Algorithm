@@ -1,0 +1,72 @@
+#include <vector>
+#include <cstring>
+#include <queue>
+#include <stack>
+#include <iostream>
+#include <math.h>
+#pragma warning(disable:4996)
+using namespace std;
+int n, m;
+int smallest = 9999999;
+
+bool visit[50];
+vector<pair<int, int> > home, chicken, picked;
+
+int find_nearest(pair<int, int> cu) {
+	int ret = 999999;
+	for (int i = 0; i < picked.size(); i++) {
+		int temp = abs(cu.first - picked[i].first) + abs(cu.second - picked[i].second);
+		ret = ret < temp ? ret : temp;
+	}
+	return ret;
+}
+
+void chicken_dinner(int pick_count) {
+	// m개 선택 시 
+	if (pick_count == m)
+	{
+		int ret = 0;
+		for (int i = 0; i < home.size(); i++) 
+			ret += find_nearest(home[i]);
+		
+		smallest = smallest < ret ? smallest : ret;
+		return;
+	}
+
+	// 치킨집 중에서 m개를 조합 선택
+	for (int i = 0; i < chicken.size(); i++) {
+		if (m - pick_count > chicken.size() - i) // 앞으로 골라야 되는 치킨집 숫자가 실제 남은 후보 치킨집 수보다 적을 때
+			return;
+		if (visit[i] == false) {
+			visit[i] = true;
+			picked.push_back(chicken[i]);
+			chicken_dinner(pick_count + 1);
+			picked.pop_back();
+			visit[i] = false;
+		}
+		
+	}
+	return;
+}
+int main() {
+	//freopen("sample_input.txt", "r", stdin);
+	cin >> n >> m;
+	int temp;
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			cin >> temp;
+			if (temp== 2)
+				chicken.push_back(pair<int, int>(i, j));
+			else if (temp == 1)
+				home.push_back(pair<int, int>(i, j));
+			else;
+		}
+	}
+
+	chicken_dinner(0);
+
+	cout << smallest;
+
+
+
+}

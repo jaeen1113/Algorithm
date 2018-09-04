@@ -1,0 +1,64 @@
+#include <vector>
+#include <queue>
+#include <iostream>
+#include <cstring>
+#pragma warning(disable:4996)
+using namespace std;
+
+char flist[50][50];
+int who[50];
+
+bool check[50];
+int n;
+int max2(int a, int b) {
+	return a > b ? a : b;
+}
+int find_friend(int me) {
+	int ret = 0;
+	queue<int> my_friends;
+	check[me] = true;
+
+	// 模备
+	for (int i = 0; i < n; i++)
+	{
+		if (flist[me][i] == 'Y')
+		{
+			ret++;
+			my_friends.push(i);
+			check[i] = true;
+		}
+	}
+
+	//模备狼 模备
+	while (!my_friends.empty()) {
+		int c = my_friends.front();
+		my_friends.pop();
+
+		for (int i = 0; i < n; i++) {
+			if (check[i] == false && flist[c][i] == 'Y')
+			{
+				ret++;
+				check[i] = true;
+			}
+		}
+	}
+	return ret;
+}
+int main() {
+	//freopen("sample_input.txt", "r", stdin);
+	int ret = 0;
+
+	cin >> n;
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++)
+			cin >> flist[i][j];
+	}
+
+	for (int i = 0; i < n; i++) {
+		memset(check, false, sizeof(check));
+		ret = max2(ret, find_friend(i));
+	}
+		
+	
+	cout << ret;
+}

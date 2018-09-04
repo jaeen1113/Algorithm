@@ -1,0 +1,69 @@
+#include <vector>
+#include <cstring>
+#include <queue>
+#include <stack>
+#include <iostream>
+#include <math.h>
+#pragma warning(disable:4996)
+using namespace std;
+int status[20][20];
+int n, output = 99999999;
+bool picked[20];
+vector<int> team_a, team_b;
+void solve(int pick_count) {
+	if (pick_count == n / 2) {
+		int sum_a =0, sum_b=0;
+		// B팀 집계
+		for (int i = 0; i < n; i++) {
+			if (picked[i] == false) {
+				team_b.push_back(i);
+			}
+		}
+
+		
+		// A팀
+		for (int i = 0; i < team_a.size(); i++) {
+			for (int j = 0; j < team_a.size(); j++) {
+				if (team_a[i] == team_a[j]) continue;
+
+				sum_a += status[team_a[i]][team_a[j]];
+			}
+		}
+		// B팀
+		for (int i = 0; i < team_b.size(); i++) {
+			for (int j = 0; j < team_b.size(); j++) {
+				if (team_b[i] == team_b[j]) continue;
+
+				sum_b += status[team_b[i]][team_b[j]];
+			}
+		}
+		int temp = abs(sum_a - sum_b);
+		output = output < temp? output : temp;
+		team_b.clear();
+		return;
+	}
+
+	for (int i = 0; i < n; i++) {
+		if (n / 2 - pick_count > n - i) // 후보선수의 수가 앞으로 고를 수보다 작으면 
+			return;
+
+		if (picked[i] == false) {
+			picked[i] = true;
+			team_a.push_back(i);
+			solve(pick_count+1);
+			team_a.pop_back();
+			picked[i] = false;
+		}
+	}
+	return;
+}
+int main() {
+	//freopen("sample_input.txt", "r", stdin);
+	cin >> n;
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < n; j++)
+			cin >> status[i][j];
+
+	solve(0);
+	cout << output << endl;
+}

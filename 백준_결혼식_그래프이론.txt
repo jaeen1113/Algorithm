@@ -1,0 +1,47 @@
+#include <vector>
+#include <queue>
+#include <iostream>
+#pragma warning(disable:4996)
+using namespace std;
+
+vector<int> f[501];
+queue<int> q;
+bool check[501];
+
+int main() {
+	freopen("sample_input.txt", "r", stdin);
+
+	int n, m;
+	int ret = 0;
+	check[0] = true;
+	check[1] = true;
+	cin >> n >> m;
+	for (int i = 0; i < m; i++)
+	{
+		int a, b;
+		cin >> a >> b;
+		f[a].push_back(b);
+		f[b].push_back(a);
+	}
+	//ģ
+	for (int i = 0; i < f[1].size(); i++)
+	{
+		ret++;
+		q.push(f[1][i]);
+		check[f[1][i]] = true;
+	}
+
+	//ģģ
+	while (!q.empty()) {
+		int c = q.front();
+		q.pop();
+		for (int i = 0; i < f[c].size(); i++) {
+			if (check[f[c][i]] == false) {
+				ret++;
+				check[f[c][i]] = true;
+			}
+		}
+	
+	}
+	cout << ret;
+}

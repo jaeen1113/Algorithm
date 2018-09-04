@@ -1,0 +1,56 @@
+#include <vector>
+#include <cstring>
+#include <queue>
+#include <stack>
+#include <iostream>
+#pragma warning(disable:4996)
+using namespace std;
+
+vector<int> station[100001];
+int check[100001];
+queue<int> q;
+int dfs(int des) {
+	q.push(1);
+	check[1] = 1;
+
+	while (!q.empty()) {
+		int current = q.front();
+		q.pop();
+		for (int i = 0; i < station[current].size(); i++) {
+			int next_station = station[current][i];
+			if (check[next_station] == -1) {
+				check[next_station] = check[current] + 1;
+				q.push(next_station);
+			}
+		}
+	}
+	return check[des];
+}
+
+int main() {
+	freopen("sample_input.txt", "r", stdin);
+
+	int n, m, k;
+	cin >> n >> k >> m;
+	memset(check, -1, sizeof(check));
+	for (int i = 0; i < m; i++)
+	{
+		vector<int> temp;
+		for (int j = 0; j < k; j++) {
+			int t;
+			cin >> t;
+			temp.push_back(t);
+		}
+
+		for (int j = 0; j < k-1; j++) {
+			for (int a = j + 1; a < k; a++) {
+				station[temp[j]].push_back(temp[a]);
+				station[temp[a]].push_back(temp[j]);
+			}
+		}
+		temp.clear();
+	}
+
+	cout << dfs(n);
+
+}
