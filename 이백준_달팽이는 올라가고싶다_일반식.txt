@@ -1,0 +1,19 @@
+#include <iostream>
+#pragma warning(disable:4996)
+
+using namespace std;
+
+
+int main() {
+	int A, B, V, day;
+	cin >> A >> B >> V;
+
+	day  = (V - A) / (A - B);
+	if ((V - A) % (A - B) != 0)
+		day++;
+
+	day++;
+
+	cout << day;
+	return 0;
+}
