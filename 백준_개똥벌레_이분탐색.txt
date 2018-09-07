@@ -1,0 +1,44 @@
+#include <iostream>
+#include <vector>
+#include <cstring>
+#pragma warning(disable:4996)
+
+using namespace std;
+
+int main() {
+	freopen("input.txt", "r", stdin);
+	int n, m, t;
+	int ret = 0, cnt=1;
+	unsigned short cave[500000];
+
+	cin >> n >> m;
+
+	memset(cave, 0, sizeof(cave));
+
+	for (int i = 1; i <= n; i++) {
+		cin >> t;
+		if (i % 2 == 0) // 짝수면 위에서 자란다
+		{
+			for (int j = m - 1; j >= m - t; j--)
+				cave[j]++;
+		}
+		else {
+			for (int j = 0; j < t; j++)
+				cave[j]++;
+		}
+	}
+
+	for (int i = 1; i < m; i++)
+	{
+		if (cave[ret] == cave[i])
+			cnt++;
+		if (cave[ret] > cave[i])
+		{
+			ret = i;
+			cnt = 1;
+		}
+	}
+
+	cout << cave[ret] << " " << cnt;
+	
+}
