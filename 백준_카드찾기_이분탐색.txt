@@ -1,0 +1,59 @@
+#include <iostream>
+#include <queue>
+#include <algorithm>
+#include <iterator>
+#include <vector>
+#include <string>
+#include <cmath>
+using namespace std;
+
+#pragma warning(disable:4996)
+
+int main() {
+//		freopen("sample_input.txt" , "r", stdin);
+	int s, g, t;
+	vector<int> sang, gam;
+	cin >> s;
+	for (int i = 0; i < s; i++)
+	{
+		cin >> t;
+		sang.push_back(t);
+	}
+	cin >> g;
+	for (int i = 0; i < g; i++)
+	{
+		cin >> t;
+		gam.push_back(t);
+	}
+
+	sort(sang.begin(), sang.end());
+
+	for (int i = 0; i < gam.size(); i++) {
+		int a =0, b=sang.size() - 1;
+		int center;
+		if (sang[a] == gam[i] || sang[b] == gam[i]) {
+			cout << 1 << " ";
+			continue;
+		}
+		while (1) {
+			if (a == b-1) {
+				cout << 0 << " ";
+				break;
+			}
+
+			center = int(ceil((a + b) / 2));
+			if (sang[center] == gam[i]) {
+				cout << 1 << " ";
+				break;
+			}
+
+			if (gam[i] < sang[center]) 
+				b = center;
+			
+			if(gam[i] > sang[center])
+				a = center;
+
+		}
+	}
+
+}
