@@ -1,0 +1,36 @@
+#include <iostream>
+#include <vector>
+#include <cstring>
+#include <algorithm>
+#pragma warning(disable:4996)
+
+using namespace std;
+vector <int> a;
+
+int main() {
+	int pay;
+	cin >> pay;
+
+	pay = 1000 - pay;
+
+	int ret = 0;
+	ret += pay / 500;
+	pay %= 500;
+
+	ret += pay / 100;
+	pay %= 100;
+
+	ret += pay / 50;
+	pay %= 50;
+
+	ret += pay / 10;
+	pay %= 10;
+
+	ret += pay / 5;
+	pay %= 5;
+
+	ret += pay;
+
+	cout << ret;
+	
+}

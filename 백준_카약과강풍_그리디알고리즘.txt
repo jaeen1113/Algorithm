@@ -1,0 +1,47 @@
+#include <iostream>
+#include <vector>
+#include <cstring>
+#include <algorithm>
+#pragma warning(disable:4996)
+
+using namespace std;
+vector <int> cracked;
+int boat[12];
+int main() {
+	int n, s, r;
+	int ret = 0;
+	cin >> n >> s >> r;
+
+	for (int i = 0; i < n; i++)
+		boat[i] = 1;
+
+	boat[0] = boat[n+1] = 0;
+
+	for (int i = 0; i < s; i++)
+	{
+		int t;
+		cin >> t;
+		boat[t] = 0;
+		cracked.push_back(t);
+	}
+
+	for (int i = 0; i < r; i++)
+	{
+		int t;
+		cin >> t; 
+		boat[t] = 2;
+	}
+	
+	for (int i = 0; i < cracked.size(); i++) {
+		if (boat[cracked[i] - 1] > 1)
+			boat[cracked[i] - 1] = 1;
+
+		else if (boat[cracked[i] + 1] > 1)
+			boat[cracked[i] + 1] = 1;
+		else
+			ret++;
+		
+	}
+
+	cout << ret; 
+}

@@ -1,0 +1,34 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <cstring>
+#include <algorithm>
+#pragma warning(disable:4996)
+
+using namespace std;
+int pipe[1001];
+vector<int> point;
+int main() {
+	int n, l;
+	cin >> n >> l;
+
+	int t;
+	for (int i = 0; i < n; i++) {
+		cin >> t;
+		pipe[t] = 1;
+		point.push_back(t);
+	}
+
+	sort(point.begin(), point.end());
+
+	int ret = 0;
+	for (int i = 0; i < point.size(); i++) {
+		if (pipe[point[i]] == 1) {
+			ret++;
+			for (int j = 0; j < l && point[i]+j < 1000; j++)
+				pipe[point[i] + j] = 0;
+		}
+	}
+
+	cout << ret;
+}
