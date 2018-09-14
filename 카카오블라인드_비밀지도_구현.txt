@@ -1,0 +1,40 @@
+#include <string>
+#include <cstring>
+#include <vector>
+
+using namespace std;
+
+vector<string> solution(int n, vector<int> arr1, vector<int> arr2) {
+   	int map[16][16];
+	int current;
+	vector<string> answer;
+	memset(map, 0, sizeof(map));
+	answer.resize(n);
+
+	for (int i = 0; i < n; i++) {
+		current = arr1[i];
+		for (int j = n-1; j >= 0; j--) {
+			map[i][j] += current % 2;
+			current /= 2;
+		}
+	}
+
+	for (int i = 0; i < n; i++) {
+		current = arr2[i];
+		for (int j = n - 1; j >= 0; j--) {
+			map[i][j] += current % 2;
+			current /= 2;
+		}
+	}
+
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			if (map[i][j] == 0)
+				answer[i].append(" ");
+			else
+				answer[i].append("#");
+		}
+	}
+	
+	return answer;
+}

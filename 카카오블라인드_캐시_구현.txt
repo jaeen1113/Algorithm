@@ -1,0 +1,57 @@
+#include <string>
+#include <iostream>
+#include <cstring>
+#include <vector>
+
+using namespace std;
+
+int find_city(vector<string> cache, string str) {
+	for (int i = 0; i < cache.size(); i++) {
+		if (cache[i] == str)
+			return i;
+	}
+	return -1;
+	
+}
+int solution(int cacheSize, vector<string> cities) {
+	int ret = 0;
+	vector<string> cache;
+	vector<string> n_cities;
+	for (int i = 0; i < cities.size(); i++) {
+		string temp;
+		for (int j = 0; j < cities[i].size(); j++) {
+			temp.push_back((char)toupper(cities[i][j]));
+		}
+		n_cities.push_back(temp);
+	}
+
+	for (int i = 0; i < n_cities.size(); i++) {
+		int t = find_city(cache, n_cities[i]);
+		if (t != -1) // HIT!
+		{
+			cache.erase(cache.begin() + t);
+			cache.push_back(n_cities[i]);
+			ret += 1;
+		}
+		else { //MISS
+			if (cache.size() < cacheSize) {
+				cache.push_back(n_cities[i]);
+			}
+			else if (cacheSize == 0) {}
+			else {
+				cache.erase(cache.begin());
+				cache.push_back(n_cities[i]);
+			}
+			ret += 5;
+		}
+	}
+
+	return ret;
+}
+
+
+int main() {
+
+	vector<string> arr1 = { "Jeju", "Pangyo", "Seoul", "NewYork", "LA" };
+	cout << solution(0, arr1);
+}
