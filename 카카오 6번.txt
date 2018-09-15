@@ -1,0 +1,115 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+typedef struct node {
+	string myaddress;
+	int linkto[3] = { 0,0,0 };
+	double word = 0;
+
+	node(string a) {
+		myaddress = a;
+	}
+};
+
+int max3(vector<node> list) {
+	int ret = list[0].word > list[1].word ? 0 : 1;
+	return list[2].word > list[ret].word ? 2 : ret ;
+}
+
+int existance(vector<node> list,string a) {
+	for (int i = 0; i < list.size(); i++) {
+		if (list[i].myaddress == a)
+			return i;
+	}
+	return -1;
+}
+
+int solution(string query, vector<string> pages) {
+	int answer = 0;
+	vector<node> list;
+	int link[3][3] = { { 0,0,0 },{ 0,0,0 },{ 0,0,0 } };
+	double word[3] = { 0,0,0 };
+	string real_query;
+	for (int j = 0; j < query.size(); j++) { // 모두 소문자로 면환
+		real_query.push_back(tolower(query[j]));
+	}
+
+	for (int i = 0; i < pages.size(); i++) { // 각 페이지 별 탐색
+		string c_page;
+		for (int j = 0; j < pages[i].size(); j++) { // 모두 소문자로 면환
+			c_page.push_back(tolower(pages[i][j]));
+		}
+
+		
+		int my_start = pages[i].find("content=", 0);
+		int my_end = pages[i].find(">", my_start+9);
+		string my_link = pages[i].substr(my_start+9, my_end - my_start-9-2);
+
+		if (existance(list, my_link) == -1) {
+			list.push_back(node(my_link));
+
+		}
+		
+		int search_pointer = my_end + 2;
+		int m = existance(list, my_link);
+		while (1) { 
+			if ((search_pointer = pages[i].find("href", search_pointer)) != -1) // 링크 찾으면 
+			{
+				int start = search_pointer+ 6;
+				int end = pages[i].find(">", start+6);
+				string sub_link = pages[i].substr(start, end-start-1);
+				
+				int t;
+				if ((t = existance(list, sub_link)) == -1) { // 서브링크가 없는 새 주소라면
+					list.push_back(node(sub_link));
+					list[m].linkto[list.size() - 1]++;
+				}
+				else {
+					list[m].linkto[t]++;
+				}
+				search_pointer = end + 1;
+
+			}
+
+			else
+				break;
+		}
+
+		// 단어 카운트 
+		search_pointer = 0;
+		while (1) {
+			if ((search_pointer = c_page.find(real_query, search_pointer)) != -1) {
+				search_pointer += real_query.size();
+				list[m].word += 1;
+			}
+			else
+				break;
+		}
+	}
+	int ex_link[3];
+	ex_link[0] = list[0].linkto[0] + list[0].linkto[1] + list[0].linkto[2];
+	ex_link[1] = list[1].linkto[0] + list[1].linkto[1] + list[1].linkto[2];
+	ex_link[2] = list[2].linkto[0] + list[2].linkto[1] + list[2].linkto[2];
+
+	double score[3];
+	score[0] = ((double)word[0] / (double)ex_link[0]);
+	score[1] = ((double)word[1] / (double)ex_link[1]);
+	score[2] = ((double)word[2] / (double)ex_link[2]);
+
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++) {
+			if (list[i].linkto[j] == 1) {
+				list[j].word += score[i];
+			}
+		}
+	}
+
+	return max3(list);
+}
+
+int main() {
+	vector<string> s = { "<html lang=\"ko\" xml:lang=\"ko\" xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n  <meta charset=\"utf-8\">\n  <meta property=\"og:url\" content=\"https://a.com\"/>\n</head>  \n<body>\nBlind Lorem Blind ipsum dolor Blind test sit amet, consectetur adipiscing elit. \n<a href=\"https://b.com\"> Link to b </a>\n</body>\n</html>", "<html lang=\"ko\" xml:lang=\"ko\" xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n  <meta charset=\"utf-8\">\n  <meta property=\"og:url\" content=\"https://b.com\"/>\n</head>  \n<body>\nSuspendisse potenti. Vivamus venenatis tellus non turpis bibendum, \n<a href=\"https://a.com\"> Link to a </a>\nblind sed congue urna varius. Suspendisse feugiat nisl ligula, quis malesuada felis hendrerit ut.\n<a href=\"https://c.com\"> Link to c </a>\n</body>\n</html>", "<html lang=\"ko\" xml:lang=\"ko\" xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n  <meta charset=\"utf-8\">\n  <meta property=\"og:url\" content=\"https://c.com\"/>\n</head>  \n<body>\nUt condimentum urna at felis sodales rutrum. Sed dapibus cursus diam, non interdum nulla tempor nec. Phasellus rutrum enim at orci consectetu blind\n<a href=\"https://a.com\"> Link to a </a>\n</body>\n</html>" };
+	solution("blind", s);
+}

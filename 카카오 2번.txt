@@ -1,0 +1,57 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+
+vector<int> selection_sort(vector<pair<int, double> > s) {
+	vector<pair<int, double> >  score = s;
+	for (int pivot = 1; pivot <= score.size() - 1; pivot++) {
+		for (int i = pivot + 1; i < score.size(); i++) {
+			if (score[pivot].second < score[i].second)
+			{
+				pair<int, double> temp = score[pivot];
+				score[pivot] = score[i];
+				score[i] = temp;
+			}
+			if (score[pivot].second == score[i].second) {
+				if (score[pivot].first > score[i].first)
+				{
+					pair<int, double> temp = score[pivot];
+					score[pivot] = score[i];
+					score[i] = temp;
+				}
+			}
+		}
+	}
+
+	vector<int> ret;
+	for (int i = 1; i < score.size(); i++)
+		ret.push_back(score[i].first);
+	return ret;
+}
+
+vector<int> solution(int N, vector<int> stages) {
+	vector<int> answer;
+	vector<pair<int, int> > stage_status(N+1, pair<int, int>(0, 0));
+
+
+	for (int i = 1; i <= stages.size(); i++) // 유저들의 스태이지 정보
+	{
+		for (int j = 1; j < stages[i-1] && j <= N; j++) { // 클리어한 애
+			stage_status[j].first++;
+		}
+		if(stages[i-1] <= N)	// 도달만하고 클리어 못한애 
+			stage_status[stages[i-1]].second++;
+	}
+	
+	vector<pair<int, double> > score(N+1);
+	for (int i = 1; i <= N; i++) {
+		score[i].first = i;
+		score[i].second = (double)stage_status[i].second / (double)stage_status[i].first;
+		
+	}
+
+	
+	return selection_sort(score);
+}
