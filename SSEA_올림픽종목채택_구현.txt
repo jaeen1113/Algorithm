@@ -1,0 +1,44 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+#pragma warning(disable:4996)
+int let_vote(vector<int> sp, int limit) {
+	for (int i = 0; i < sp.size(); i++)
+	{
+		if (sp[i] <= limit)
+			return i;
+	}
+}
+
+void main() {
+	//freopen("input.txt" , "r", stdin);
+	int t, man, sport, temp;
+	vector<int> vote, s_arr;
+	cin >> t;
+	for (int i = 0; i < t; i++) {
+		int max = 0;
+		cin >> sport >> man;
+		s_arr.clear();
+		vote.clear();
+
+		vote.resize(sport, 0);
+		
+
+		for (int j = 0; j < sport; j++)
+		{
+			cin >> temp;
+			s_arr.push_back(temp);
+		}
+
+		for (int j = 0; j < man; j++)
+		{
+			cin >> temp;
+			int ticket = let_vote(s_arr, temp);
+			vote[ticket]++;
+			max = vote[ticket] > vote[max] ? ticket : max;
+		}
+
+		cout << "#" << i + 1 << " " << max+1 << endl;
+
+	}
+}

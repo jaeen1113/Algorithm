@@ -1,0 +1,52 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define INF (0x7fffffff)
+#define MAX (110)
+ 
+int num[10];
+int p;
+ 
+void getAns(void);
+ 
+int main(void)
+{
+    int i, t, j;
+    for (i = 0; i < 10; i++)
+    {
+        memset(num, 0, sizeof(num));
+        scanf("%d", &t);
+        for (j = 0; j < 8; j++) scanf("%d", &num[j]);
+        getAns();
+        printf("#%d ", t);
+        for (j = 0; j < 8; j++)
+        {
+            printf("%d ", num[p++]);
+            if (p > 7) p = 0;
+        }
+        printf("\n");
+    }
+    return 0;
+}
+ 
+void getAns(void)
+{
+    int i, x;
+    p = 0;
+    x = 1;
+    while (num[p] > 0)
+    {
+        num[p] = num[p] - x;
+        if (num[p] <= 0)
+        {
+            num[p] = 0;
+            break;
+        }
+        p++;
+        x++;
+        if (x > 5) x = 1;
+        if (p > 7) p = 0;
+    }
+    p++;
+    if (p > 7) p = 0;
+}
