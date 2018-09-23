@@ -1,0 +1,68 @@
+#include <iostream>
+#include <queue>
+#include <cstdio>
+#include <vector>
+#include <cstring>
+#include <algorithm>
+
+using namespace std;
+
+#pragma warning(disable:4996)
+
+queue<int> q;
+int ax[4] = {1, -1, 0 , 0};
+int ay[4] = {0,  0, 1, -1};
+int map[16][16];
+void bfs() {
+	while (!q.empty()) {
+		int y = q.front();
+		q.pop();
+		int x = q.front();
+		q.pop();
+
+		for (int i = 0; i < 4; i++){
+			int nx = x + ax[i];
+			int ny = y + ay[i];
+			if (nx >= 0 && ny >= 0 && nx < 16 && ny < 16 && (map[ny][nx] == 0 || map[ny][nx] == 3))
+			{
+				q.push(ny);
+				q.push(nx);
+				map[ny][nx] = 2;
+			}
+		}
+	}
+}
+
+int main() {
+	freopen("input.txt", "r", stdin);
+	for(int i = 1; i <= 10; i++){
+		int t;
+		cin >> t;
+		int ret = 0;
+		pair<int, int> output;
+
+		for (int j = 0; j < 16; j++) {
+			for (int k = 0; k < 16; k++) {
+				scanf("%1d", &map[j][k]);
+
+				if (map[j][k] == 2) {
+					q.push(j);
+					q.push(k);
+				}
+
+
+				if (map[j][k] == 3) {
+					output.first = j;
+					output.second = k;
+				}
+			}
+		}
+
+		bfs();
+
+		if (map[output.first][output.second] == 2)
+			ret = 1;
+
+		cout << "#" << t << " " << ret << endl;
+	}
+}
