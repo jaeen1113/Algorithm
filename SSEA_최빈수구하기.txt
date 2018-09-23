@@ -1,0 +1,38 @@
+
+
+#include <iostream>
+#include <cstdio>
+#include <vector>
+
+#include <algorithm>
+
+using namespace std;
+
+#pragma warning(disable:4996)
+
+int main() {
+	freopen("input.txt", "r", stdin);
+	int t; 
+	cin >> t;
+	for (int i = 0; i < t; i++) {
+		int ca;
+		cin >> ca;
+
+		int arr[101];
+		memset(arr, 0, sizeof(arr));
+
+		int max_val = 0;
+
+		for (int i = 0; i < 1000; i++) {
+			int temp;
+			cin >> temp;
+
+			arr[temp]++;
+			max_val = arr[max_val] > arr[temp] ? max_val : temp;
+		}
+
+		cout << "#" << ca << " " << max_val << endl;
+	}
+
+
+}
