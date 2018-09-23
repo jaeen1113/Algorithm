@@ -1,0 +1,56 @@
+#include <iostream>
+#include <queue>
+#include <cstdio>
+#include <vector>
+#include <cstring>
+#include <algorithm>
+
+using namespace std;
+
+#pragma warning(disable:4996)
+
+queue<int> q;
+int ax[4] = {1, -1, 0 , 0};
+int ay[4] = {0,  0, 1, -1};
+int map[100][100];
+
+int main() {
+	freopen("input.txt", "r", stdin);
+	for(int i = 1; i <= 10; i++){
+		int t;
+		cin >> t;
+		int sx, sy;
+
+		for (int j = 0; j < 100; j++) {
+			for (int k = 0; k < 100; k++) {
+				cin >> map[j][k];
+
+				if (map[j][k] == 2) {
+					sy = j;
+					sx = k;
+				}
+			}
+		}
+
+		while (sy != 0) {
+			if (sx > 0 && map[sy][sx - 1] == 1)
+			{
+				map[sy][sx] = 0;
+				sx--;
+			}
+			else if (sx < 99 && map[sy][sx + 1] == 1)
+			{
+				map[sy][sx] = 0;
+				sx++;
+			}
+			else if (map[sy - 1][sx] == 1)
+			{
+				map[sy][sx] = 0;
+				sy--;
+			}
+			else;
+		}
+
+		cout << "#" << t << " " << sx << endl;
+	}
+}
