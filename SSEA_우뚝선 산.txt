@@ -1,0 +1,85 @@
+#include <iostream>
+#include <cstring>
+#include <vector>
+using namespace std;
+#pragma warning(disable:4996)
+int mountain[50000];
+vector< vector<int>> checked;
+int highest(int st, int end) {
+	int ret = st;
+	for (int i = st; i <= end; i++) {
+		ret = mountain[ret] > mountain[i] ? ret : i;
+	}
+
+	return ret;
+}
+
+int find_canion(int st, int end) {
+	int ret = st;
+	for (int i = st+1; i < end; i++) {
+		if (mountain[i - 1] > mountain[i] && mountain[i] < mountain[i + 1])
+			return i;
+	}
+	return -1;
+}
+
+
+bool isgood(int st, int end) {
+	int temp = highest(st, end);
+	if (temp == st || temp == end)
+		return false;
+
+	for (int i = st; i < temp; i++)
+	{
+		if (mountain[i] > mountain[i + 1])
+			return false;
+	}
+
+	for (int i = temp; i < end; i++)
+	{
+		if (mountain[i] < mountain[i + 1])
+			return false;
+	}
+	return true;
+}
+
+int solve(int st, int end) {
+	if (end - st < 2 || find(checked[st].begin(), checked[st].end(), end) != checked[st].end()) // 두칸짜리나 한칸짜리 케이스, 이미 방문한 구간은 보지 않음 ㅎ.
+		return 0;
+
+	if (isgood(st, end))
+	{
+		checked[st].push_back(end);
+		return 1 + solve(st + 1, end) + solve(st, end - 1);
+	}
+
+	else {
+		int temp = find_canion(st, end);
+		if (temp == -1) // 협곡도 없는데 안되는 구간이면 
+			return 0;
+
+		return solve(st, temp - 1) + solve(temp + 1, end);
+	}
+}
+
+
+int main() {
+	freopen("input.txt", "r", stdin);
+	int t, num;
+	cin >> t;
+
+	for (int i = 0; i < t; i++) {
+		memset(mountain, 0, sizeof(mountain));
+		cin >> num;
+		checked.resize(num);
+		for (int j = 0; j < num; j++) {
+			cin >> mountain[j];
+		}
+
+		cout << solve(0, num - 1)<<endl;
+		for (int j = 0; j < num; j++)
+			checked[j].clear();
+	}
+
+
+}
