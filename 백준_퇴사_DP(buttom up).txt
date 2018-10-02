@@ -1,0 +1,45 @@
+#include <iostream>
+#include <cstring>
+#pragma warning(disable:4996)
+
+using namespace std;
+int dp[20];
+int consultant[20][2];
+int N;
+int max2(int a, int b)
+{
+	return a > b ? a : b;
+}
+
+int solve() {
+	int ret = 0;
+	//i  = 날짜
+	for (int i = 1; i <= N; i++) {
+		// 이동할 날짜
+		int doit = i + consultant[i][0];
+		int notit = i + 1;
+		if (doit <= N+1)
+			dp[doit] = max2(dp[doit], dp[i] + consultant[i][1]);
+		if (notit <= N+1)
+			dp[notit] = max2(dp[notit], dp[i]);
+
+		ret = max2(ret, max2(dp[doit], dp[notit]));
+	}
+
+	return ret;
+}
+
+
+
+int main() {
+
+//	freopen("input.txt", "r", stdin);
+
+	cin >> N;
+	for (int i = 1; i <= N; i++)
+		cin >> consultant[i][0] >> consultant[i][1];
+
+
+	cout << solve();
+
+}
