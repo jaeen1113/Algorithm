@@ -1,0 +1,18 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+bool arr[1000001];
+int main() {
+	
+	int t = sqrt(1000000);
+	for (int i = 2; i <= 1000000; i++)
+	{
+		if (!arr[i])
+			cout << i << " ";
+		
+
+		for (int j = 1; i*j <= 1000000; j++)
+			arr[i*j] = true;
+	}
+}
