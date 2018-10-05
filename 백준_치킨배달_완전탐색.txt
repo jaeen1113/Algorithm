@@ -1,0 +1,74 @@
+#include <iostream>
+#include <cstring>
+#include <vector>
+#include <cmath>
+#include <algorithm>
+#pragma warning(disable:4996)
+
+using namespace std;
+
+bool pickup[25];
+int n, m;
+vector<pair<int, int> > house;
+vector<pair<int, int> > chicken, picked;
+
+int min2(int a, int b)
+{
+
+	return a < b ? a : b;
+}
+
+int cdist(pair<int, int> h) {
+	int ret = 999999;
+	for (int i = 0; i < picked.size(); i++)
+	{
+		int dis = abs(picked[i].first - h.first) + abs(picked[i].second - h.second);
+		ret = ret < dis ? ret : dis;
+	}
+	return ret;
+}
+
+int solve(int current) {
+	if (picked.size() == m)
+	{
+		int ret = 0;
+		for (int i = 0; i < house.size(); i++)
+		{
+			ret += cdist(house[i]);
+		}
+		return ret;
+	}
+
+
+	int ret = 99999;
+
+	for (int i = current; i < chicken.size(); i++) {
+		picked.push_back(chicken[i]);
+		ret = min2( ret, solve(current+1));
+		picked.pop_back();
+	}
+	return ret;
+}
+
+
+int main() {
+	freopen("input.txt", "r", stdin);
+	cin >> n >> m;
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			int t;
+			cin >> t;
+			if (t == 1)
+			{
+				house.push_back(pair<int, int>(i, j));
+			}
+			if (t == 2)
+			{
+				chicken.push_back(pair<int, int>(i, j));
+			}
+		}
+	}
+
+
+	cout << solve(0);
+}
