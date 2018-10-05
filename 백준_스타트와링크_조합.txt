@@ -1,0 +1,78 @@
+#include <iostream>
+#include <cstring>
+#include <vector>
+#include <cmath>
+#include <algorithm>
+#pragma warning(disable:4996)
+
+using namespace std;
+
+bool pickup[25];
+int n;
+int status[25][25];
+vector<int> team_a;
+vector<int> team_b;
+
+int min2(int a, int b)
+{
+
+	return a < b ? a : b;
+}
+
+int team_power(vector<int > v) {
+	int ret = 0;
+	for (int i = 0; i < v.size(); i++)
+	{
+		for (int j = i + 1; j < v.size(); j++)
+		{
+			ret += status[v[i]][v[j]];
+			ret += status[v[j]][v[i]];
+		}
+	}
+	return ret;
+}
+
+
+int solve(int current) {
+	if (team_a.size() == n / 2) // team a랑 team b간의 전력 차 반환
+	{
+		team_b.clear();
+		for (int i = 0; i < n; i++) // a에 속하지 않은 애들 B로 삽입
+		{
+			if (pickup[i] == false) {
+				team_b.push_back(i);
+			}
+		}
+
+		int power_a = team_power(team_a);
+		int power_b = team_power(team_b);
+		return abs(power_a- power_b);
+	}
+
+
+	int ret = 999999;
+
+
+	for (int i = current; i < n; i++) {
+		pickup[i] = true;
+		team_a.push_back(i);
+		int temp = solve(i + 1);
+		ret = min2( ret, temp);
+		pickup[i] = false;
+		team_a.pop_back();
+	}
+
+	return ret;
+}
+
+
+int main() {
+	freopen("input.txt", "r", stdin);
+	cin >> n;
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < n; j++)
+			cin >> status[i][j];
+
+
+	cout << solve(0);
+}
