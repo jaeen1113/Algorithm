@@ -1,0 +1,210 @@
+#include <iostream>
+#include <cstring>
+#include <vector>
+#include <cstdio>
+#include <cmath>
+#include <algorithm>
+#include <queue>
+#pragma warning(disable:4996)
+
+
+
+using namespace std;
+int map[8][8];
+int cache[8][8];
+int n, m;
+struct cam {
+	int dir; // 1, 2, 3 , 4
+	int y;
+	int x;
+	int type;// 1, 2, 3, 4, 5
+	cam(int id, int iy, int ix, int itype) {
+		dir = id;
+		y = iy;
+		x = ix;
+		type = itype;
+	}
+};
+vector<cam> cam_list;
+
+int min2(int a, int b) {
+	return a < b ? a : b;
+}
+
+void north(int y, int x) {
+	for (int i = y - 1; i >= 0 && cache[i][x] != 6; i--)
+	{
+		if (cache[i][x] >= 1 && cache[i][x] <= 5)
+			continue;
+
+		cache[i][x] = -1;
+	}
+}
+
+void south(int y, int x) {
+	for (int i = y + 1; i < n && cache[i][x] != 6; i++)
+	{
+		if (cache[i][x] >= 1 && cache[i][x] <= 5)
+			continue;
+
+		cache[i][x] = -1;
+	}
+}
+
+void east(int y, int x) {
+	for (int i = x + 1; i < m && cache[y][i] != 6; i++)
+	{
+		if (cache[y][i] >= 1 && cache[y][i] <= 5)
+			continue;
+
+		cache[y][i] = -1;
+	}
+	
+}
+
+void west(int y, int x) {
+	for (int i = x - 1; i >= 0 && cache[y][i] != 6; i--)
+	{
+		if (cache[y][i] >= 1 && cache[y][i] <= 5)
+			continue;
+
+		cache[y][i] = -1;
+	}
+}
+
+void cctv(cam c) {
+	if (c.type == 1) {
+		if (c.dir == 1) { // 북쪽 볼때
+			north(c.y, c.x);
+		}
+		else if (c.dir == 3) // 남쪽 볼때
+		{
+			south(c.y, c.x);
+		}
+		else if (c.dir == 2) {
+			east(c.y, c.x);
+		}
+		else
+			west(c.y, c.x);
+	}
+	else if (c.type == 2) {
+		if (c.dir == 1 || c.dir == 3) // 위아래 볼떄
+		{
+			north(c.y, c.x);
+			south(c.y, c.x);
+		}
+		else {
+			east(c.y, c.x);
+			west(c.y, c.x);
+		}
+	}
+	else if (c.type == 3) {
+		if (c.dir == 1) {
+			north(c.y, c.x);
+			east(c.y, c.x);
+		}
+		else if (c.dir == 2) {
+			east(c.y, c.x);
+			south(c.y, c.x);
+		}
+		else if (c.dir == 3) {
+			south(c.y, c.x);
+			west(c.y, c.x);
+		}
+		else {
+			west(c.y, c.x);
+			north(c.y, c.x);
+		}
+	}
+	else if (c.type == 4)
+	{
+		if (c.dir == 1)
+		{
+			north(c.y, c.x);
+			east(c.y, c.x);
+			west(c.y, c.x);
+		}
+		else if (c.dir == 2)
+		{
+			north(c.y, c.x);
+			east(c.y, c.x);
+			south(c.y, c.x);
+		}
+		else if (c.dir == 3)
+		{
+			east(c.y, c.x);
+			south(c.y, c.x);
+			west(c.y, c.x);
+		}
+		else {
+			south(c.y, c.x);
+			west(c.y, c.x);
+			north(c.y, c.x);
+		}
+	}
+	else {
+		north(c.y, c.x);
+		east(c.y, c.x);
+		south(c.y, c.x);
+		west(c.y, c.x);
+	}
+}
+int solve(int current) {
+	if (current == cam_list.size()) {
+		for (int i = 0; i < n; i++) // 원래의 맵 복사
+			for (int j = 0; j < m; j++)
+				cache[i][j] = map[i][j];
+
+		for (int i = 0; i < cam_list.size(); i++) {
+			cctv(cam_list[i]);
+		}
+
+		int ret = 0;
+		for (int i = 0; i < n; i++) // 원래의 맵 복사
+		{
+			for (int j = 0; j < m; j++) {
+				if (cache[i][j] == 0)
+					ret++;
+			}
+		}
+		return ret;
+	}
+
+	int ret = 999999;
+
+	int limit = 4;
+	if (cam_list[current].type == 2)
+		limit = 2;
+	if (cam_list[current].type == 5)
+		limit = 1;
+
+	for (int i = 1; i <= limit; i++) {
+		cam_list[current].dir = i;
+		ret = min2(ret, solve(current + 1));
+	}
+
+	return ret; 
+}
+
+int main() { 
+	freopen("input.txt" , "r", stdin);
+	cin >> n >> m;
+
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < m; j++) {
+			int t;
+			cin >> t;
+			if (t != 0 && t != 6)
+			{
+				cam c(1, i, j, t);
+				cam_list.push_back(c);
+			}
+			
+			map[i][j] = t;
+		}
+	}
+
+
+	cout << solve(0);
+
+}
