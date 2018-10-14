@@ -1,0 +1,79 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+int n, m;
+int a[501][501];
+int check[501][501];
+int ans = 0;
+int dx[] = { 0,0,1,-1 };
+int dy[] = { 1,-1,0,0 };
+void chk() {
+   //た
+   for (int i = 1; i < n-1; i++) {
+      for (int j = 0; j < m-1; j++) {
+         int temp = a[i][j] + a[i - 1][j] + a[i + 1][j] + a[i][j + 1];
+         ans = max(ans, temp);
+      }
+   }
+   //っ
+   for (int i = 1; i < n - 1; i++) {
+      for (int j = 1; j < m; j++) {
+         int temp = a[i][j] + a[i - 1][j] + a[i + 1][j] + a[i][j - 1];
+         ans = max(ans, temp);
+      }
+   }
+   //で
+   for (int i = 1; i < n; i++) {
+      for (int j = 1; j < m - 1; j++) {
+         int temp = a[i][j] + a[i][j-1] + a[i][j+1] + a[i-1][j];
+         ans = max(ans, temp);
+      }
+   }
+   //ぬ
+   for (int i = 0; i < n - 1; i++) {
+      for (int j = 1; j < m - 1; j++) {
+         int temp = a[i][j] + a[i][j - 1] + a[i][j + 1] + a[i + 1][j];
+         ans = max(ans, temp);
+      }
+   }
+
+}
+void dfs(int x, int y, int cnt, int sum) {
+   if (cnt == 4) {
+      ans = max(ans, sum);
+      return;
+   }
+   for (int i = 0; i < 4; i++) {
+      int nx = x + dx[i];
+      int ny = y + dy[i];
+      if (nx >= 0 && nx < n && ny >= 0 && ny < m) {
+         if (check[nx][ny] == 0)
+         {
+            check[nx][ny] = 1;
+            dfs(nx, ny, cnt + 1, sum + a[nx][ny]);
+            check[nx][ny] = 0;
+         }
+
+      }
+   }
+}
+
+
+int main() {
+   scanf("%d %d", &n, &m);
+   for (int i = 0; i < n; i++) {
+      for (int j = 0; j < m; j++) {
+         scanf("%d", &a[i][j]);
+      }
+   }
+   for (int i = 0; i < n; i++) {
+      for (int j = 0; j < m; j++) {
+         check[i][j] = 1;
+         dfs(i, j, 1, a[i][j]);
+         check[i][j] = 0;
+      }
+   }
+   chk();
+   printf("%d\n", ans);
+   return 0;
+}
