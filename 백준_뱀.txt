@@ -1,0 +1,104 @@
+#include <iostream>
+#include <cstring>
+#include <vector>
+#include <cstdio>
+#include <cmath>
+#include <algorithm>
+#include <queue>
+
+#pragma warning(disable:4996)
+
+
+
+using namespace std;
+int n, k, l;
+int dir = 1;
+struct node {
+	int dir = -1;
+	int val = -1;
+};
+node map[100][100];
+
+char comm[10001];
+
+int addx[4] = {0, 1, 0, -1};
+int addy[4] = {-1, 0, 1, 0};
+
+pair<int, int> head(0, 0);
+pair<int, int> tail(0, 0);
+
+
+int solve() {
+	map[0][0].dir = dir;
+	map[0][0].val = 2;
+	int t = 0;
+	while (1) {
+
+		if (comm[t] == 'L') {
+			dir -= 1;
+			if (dir < 0)
+				dir = 3;
+			map[head.first][head.second].dir = dir;
+		}
+
+		if (comm[t] == 'D') {
+			dir += 1;
+			if (dir > 3)
+				dir = 0;
+
+			map[head.first][head.second].dir = dir;
+		}
+
+		pair<int, int> next(head.first + addy[dir], head.second + addx[dir]);
+
+		if (next.first < 0 || next.second < 0 || next.first >= n || next.second >= n) // 벽에 부딪히면 
+			break;
+		if (map[next.first][next.second].val == 2) break; // 지몸에 박으면
+
+		if (map[next.first][next.second].val == 1) // 앞에 사과 있을 때에 
+		{
+			head = next;
+			map[head.first][head.second].val = 2;
+			map[head.first][head.second].dir = dir;
+		}
+		else { // 아무 것도 없을 띠에
+			head.first += addy[dir];
+			head.second += addx[dir];
+			map[head.first][head.second].val = 2;
+			map[head.first][head.second].dir = dir;
+	
+			pair<int, int> temp = tail;
+			//map[tail.first][tail.second].val = -1;
+			tail.first += addy[map[temp.first][temp.second].dir];
+			tail.second += addx[map[temp.first][temp.second].dir];
+		
+			map[temp.first][temp.second].val = -1;
+			map[temp.first][temp.second].dir = -1;
+		
+		}
+		t++;
+	}
+
+	return t+1;
+}
+int main() {
+	//freopen("input.txt", "r", stdin);
+	cin >> n >> k;
+	// 1 : 사과 . 2 : 뱀몸통
+	for (int i = 0; i < k; i++) {
+		int a, b;
+		cin >> a >> b;
+		map[a-1][b-1].val = 1;
+	}
+
+	cin >> l;
+	for (int i = 0; i < l; i++) {
+		int a;
+		char b;
+		cin >> a >> b;
+		comm[a] = b;
+	}
+
+	cout << solve();
+	
+}
