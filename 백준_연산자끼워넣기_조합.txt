@@ -1,0 +1,83 @@
+
+#include <iostream>
+#include <vector>
+#pragma warning(disable:4996)
+
+using namespace std;
+//    0, 1, 2 , 3
+int  add, sub, mul, divi;
+int t;
+int numbers[100];
+int max_one = -1000000100, min_one = 1000000100;
+vector<int> op;
+vector<bool> check;
+vector<int> picked;
+
+void solve(int c) {
+	if (c == op.size()) {
+		int ret = numbers[0];
+		for (int i = 0; i < picked.size(); i++) {
+			if (picked[i] == 0) // add
+			{
+				ret += numbers[i + 1];
+			}
+			
+			if (picked[i] == 1) // sub
+			{
+				ret -= numbers[i + 1];
+			}
+
+			if (picked[i] == 2) // mul
+			{
+				ret *= numbers[i + 1];
+			}
+
+			if (picked[i] == 3) // divi
+			{
+				ret /= numbers[i + 1];
+			}
+		}
+		max_one = max_one > ret ? max_one : ret;
+		min_one = min_one < ret ? min_one : ret;
+	}
+
+	else {
+		for (int i = 0; i < op.size(); i++) {
+			if (check[i] == false) {
+				check[i] = true;
+				picked.push_back(op[i]);
+				solve(c + 1);
+				picked.pop_back();
+				check[i] = false;
+			}
+		}
+	}
+
+}
+int main() {
+	freopen("input.txt", "r", stdin);
+	cin >> t;
+
+	for (int i = 0; i < t; i++)
+		cin >> numbers[i];
+
+	cin >> add >> sub >> mul >> divi;
+
+	for (int i = 0; i < add; i++)
+		op.push_back(0);
+
+	for (int j = 0; j < sub; j++)
+		op.push_back(1);
+
+	for (int i = 0; i < mul; i++)
+		op.push_back(2);
+
+	for (int i = 0; i < divi; i++)
+		op.push_back(3);
+
+	check.resize(op.size(), false);
+
+	solve(0);
+
+	cout << max_one << endl << min_one;
+}
